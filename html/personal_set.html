@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>个人设置</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/mui.css">
+    <link rel="stylesheet" href="css/mui.picker.min.css">
+    <link rel="stylesheet" href="css/mui.poppicker.css">
+</head>
+<body id="person_body">
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>个人设置</span>
+</div>
+<!--//onchange="javaScript:showPreview(this)"-->
+<form class="perSon marTop5">
+    <div class="mui-input-group marTop">
+        <div class="mui-input-row headPic" id="uploadPhoto">
+            <label>头像</label>
+            <input type="file" class="camera" id="file_head" style="opacity:0">
+            <img src="../statics/img/1.jpg" alt="" id="touxiang">
+        </div>
+        <div class="mui-input-row">
+            <label>姓名</label>
+            <input type="text" placeholder="输入姓名" class="text" id="pet_name" maxlength="7">
+        </div>
+        <div class="mui-input-row radio">
+            <label>性别</label>
+            <div class="mui-input-group">
+                <div class="mui-input-row mui-radio mui-pull-left">
+                    <label>男</label>
+                    <input type="radio"  name="sex" value="男" class="per_man">
+                </div>
+                <div class="mui-input-row mui-radio mui-pull-left">
+                    <label>女</label>
+                    <input type="radio"  name="sex" value="女" class="per_woman">
+                </div>
+            </div>
+        </div>
+        <div class="mui-input-row">
+            <label>地址</label>
+            <div class="mui-content-padded" id="add_address">
+                <button id='showCityPicker' class="mui-btn mui-btn-block" type='button'>二级联动示例 ...</button>
+                <div id='cityResult' class="ui-alert"></div>
+            </div>
+        </div>
+        <div class="mui-input-row">
+            <label>出生日期</label>
+            <input type="text" id="result" placeholder="选择日期" readonly>
+        </div>
+        <div class="mui-input-row">
+            <label>电话</label>
+            <input type="text" placeholder="填写手机号" class="text" id="phone" pattern="^1(3|4|5|7|8)\d{9}$">
+        </div>
+    </div>
+</form>
+<input type="button" class="btn" value="保存" id="person_save">
+<script type="text/javascript" src="../statics/js/common/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../statics/js/common/basic.js"></script>
+<script type="text/javascript" src="../statics/js/common/plupload.full.min.js"></script>
+<script type="text/javascript" src="../statics/js/common/qiniu.min.js"></script>
+<script  type="text/javascript" src="js/mui.min.js"></script>
+<script type="text/javascript" src="js/mui.picker.min.js"></script>
+<script type="text/javascript" src="js/mui.poppicker.js"></script>
+<script type="text/javascript" src="js/city.data.js"></script>
+<script type="text/javascript">
+    (function(window,undefined){
+        //正式数据
+        var userToken=localStorage.getItem("userToken");
+        var userId=localStorage.getItem('userId');
+        //测试数据
+//        var userToken='b154627c8fee4614aae4989795cfb1b0220000000b154627c8fee4614aae4989795cfb1b0';
+//        var userId='20000000b154627c8fee4614aae4989795cfb1b0';
+        var tel=document.getElementById('phone');
+        //上传图片
+         $.ajax({
+            type:'get',
+            url:window.YLZ.base+'com/token/qiniu/uptoken?bucket=yyy-pat-head&token='+userToken,
+            data:{
+
+            },
+            success:function(data){
+                var uploadToken=data.token;
+                var uploader = Qiniu.uploader({
+                    runtimes: 'html5,flash,html4',      // 上传模式，依次退化
+                    browse_button: 'file_head',         // 上传选择的点选按钮，必需
+                    // 在初始化时，uptoken，uptoken_url，uptoken_func三个参数中必须有一个被设置
+                    // 切如果提供了多个，其优先级为uptoken > uptoken_url > uptoken_func
+                    // 其中uptoken是直接提供上传凭证，uptoken_url是提供了获取上传凭证的地址，如果需要定制获取uptoken的过程则可以设置uptoken_func
+                    uptoken :uploadToken, // uptoken是上传凭证，由其他程序生成
+                    // uptoken_url: '/uptoken',         // Ajax请求uptoken的Url，强烈建议设置（服务端提供）
+                    // uptoken_func: function(file){    // 在需要获取uptoken时，该方法会被调用
+                    //    // do something
+                    //    return uptoken;
+                    // },
+                    // downtoken_url: '/downtoken',
+                    // Ajax请求downToken的Url，私有空间时使用，JS-SDK将向该地址POST文件的key和domain，服务端返回的JSON必须包含url字段，url值为该文件的下载地址
+                    unique_names: true,              // 默认false，key为文件名。若开启该选项，JS-SDK会为每个文件自动生成key（文件名）
+                    // save_key: true,                  // 默认false。若在服务端生成uptoken的上传策略中指定了sava_key，则开启，SDK在前端将不对key进行任何处理
+                    domain: 'yyy-pat-head',     // bucket域名，下载资源时用到，必需
+                    // domain: 'http://upload.qiniu.com/',
+                    get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
+                    container: 'uploadPhoto',             // 上传区域DOM ID，默认是browser_button的父元素
+                    max_file_size: '100mb',             // 最大文件体积限制
+                    flash_swf_url: 'js/plupload/Moxie.swf',  //引入flash，相对路径
+                    max_retries: 10,                     // 上传失败最大重试次数
+                    dragdrop: true,                     // 开启可拖曳上传
+                    drop_element: 'uploadPhoto',          // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+                    chunk_size: '0mb',                  // 分块上传时，每块的体积
+                    auto_start: true,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+                    resize:{
+                        crop:true,
+                        quality:60,
+                        preserve_headers:false
+                      },      
+                    //x_vars : {
+                    //    查看自定义变量
+                    //    'time' : function(up,file) {
+                    //        var time = (new Date()).getTime();
+                    // do something with 'time'
+                    //        return time;
+                    //    },
+                    //    'size' : function(up,file) {
+                    //        var size = file.size;
+                    // do something with 'size'
+                    //        return size;
+                    //    }
+                    //},
+                    init: {
+                        'FilesAdded': function(up, files) {
+                            plupload.each(files, function(file) {
+                                // 文件添加进队列后，处理相关的事情
+                            });
+                        },
+                        'BeforeUpload': function(up, file) {
+                            // 每个文件上传前，处理相关的事情
+                        },
+                        'UploadProgress': function(up, file) {
+                            // 每个文件上传时，处理相关的事情
+                        },
+                        'FileUploaded': function(up, file, info) {
+                            // 每个文件上传成功后，处理相关的事情
+                            // 其中info是文件上传成功后，服务端返回的json，形式如：
+                            // {
+                            //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
+                            //    "key": "gogopher.jpg"
+                            //  }
+                            // 查看简单反馈
+                             var domain = up.getOption('domain');
+                             var res=JSON.parse(info);
+                             var sourceLink ='http://'+data.domain+'/'+res.key; //获取上传成功后的文件的Url
+                             $('#touxiang').attr('src',sourceLink);
+                        },
+                        'Error': function(up, err, errTip) {
+                            //上传出错时，处理相关的事情
+                            alert('上传出现异常，请稍后重试')
+                        },
+                        'UploadComplete': function() {
+                            //队列文件处理完毕后，处理相关的事情
+                        },
+                        'Key': function(up, file) {
+                            // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+                            // 该配置必须要在unique_names: false，save_key: false时才生效
+
+                            var key = "";
+                            // do something with key here
+                            return key
+                        }
+                    }
+                });
+            }
+        });
+
+//        $(".perSon input").attr("readonly",true);
+//        点击保存向后台传入数据\
+        $('#person_save').on('tap',function(){
+            var birthday = $('#result').val();
+            var image = $('#touxiang').attr('src');
+            var pet_name = $('#pet_name').val();
+            var phone = $('#phone').val();
+            var sex = $('input:radio[name="sex"]:checked').val();
+            var address = $('#cityResult').html();
+            if(birthday==''||image==''||pet_name==''||phone==''||sex==''||address==''){
+               alert('内容不能有空')
+            }else if(tel.validity.patternMismatch||tel.value==''){
+                alert('请输入正确的手机号');
+            }
+            else{
+                $.ajax({
+                    type: 'put',
+                    url: window.YLZ.base+'pat/pats?token='+userToken,
+                    contentType:'application/json; charset=utf-8',
+                    dataType:'json',
+                    data:JSON.stringify({
+                        'birthday': birthday,
+                        'image': image,
+                        'name': pet_name,
+                        'phone': phone,
+                        'sex': sex,
+                        'address': address
+                    }),
+                    success: function (data) {
+                        if(data.result.code==0){
+                            setTimeout(function(){
+                               location.href="my_Introduce.html";
+                           },600);
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+
+        //初始化个人基本信息
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'com/pats/'+userId+'?token='+userToken,
+            data:'',
+            success:function(data){
+                var data=data.info;
+                $('#result').val(data.birth);//出生日期
+                $('#touxiang').attr('src',data.image);//图片路径
+                var pet_name = $('#pet_name').val(data.name);//昵称
+                var phone = $('#phone').val(data.phone);//手机号
+                if(data.sex=='男'){
+                    $('.per_man').attr('checked',true)
+                }else{
+                    $('.per_woman').attr('checked',true)
+                }
+                $('#cityResult').html(data.address);
+            }
+        });
+
+//        //日期的选择
+        function Dtpicker() {
+            var result = mui("#result")[0];
+            options={
+                type:"date",
+                labels:["年","月","日"],
+                beginDate:new Date(1950,01,01),
+                endDate:new Date(2016,01,01)
+            };
+            result.addEventListener("click", function () {
+                var picker = new mui.DtPicker(options);
+                picker.show(function (e) {
+                    result.value= e.value;
+                })
+            },false)
+        }
+        Dtpicker();
+        //地址的选择
+        (function($$, doc) {
+            $$.init();
+            $$.ready(function() {
+                //级联示例
+                var cityPicker = new $$.PopPicker({
+                    layer: 2
+                });
+                cityPicker.setData(cityData);
+                var showCityPickerButton = doc.getElementById('showCityPicker');
+                var cityResult = doc.getElementById('cityResult');
+                showCityPickerButton.addEventListener('tap', function(event) {
+                    cityPicker.show(function(items) {
+                        cityResult.innerText =items[0].text + " " + items[1].text;
+                        //返回 false 可以阻止选择框的关闭
+//                        return false;
+                    });
+                }, false);
+            });
+        })(mui, document);
+    })(window);
+</script>
+</body>
+</html>

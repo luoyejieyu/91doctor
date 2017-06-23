@@ -1,0 +1,546 @@
+﻿/*common font color */
+$pri_c:#ccc;
+$c_w:#fff;
+$c_g:#57D1A8;
+$c_bg:#F4F4F4;
+$c_b:black;
+$c_f:#A9A9A9;
+$c_a:#A4A4A4;
+$c_65:#A4A4A4;
+$c_cc:#CCCCCC;
+$c_r:#D56699;
+$c_blu:#169BD5;
+$f_yh:\5FAE\8F6F\96C5\9ED1;
+$f_s:\5B8B\4F53;
+$f_h:\9ED1\4F53;
+$f_xh:\534E\6587\7EC6\9ED1;
+$p_6:0.4rem;
+$f_13:1.3rem;
+$f_14:1.4rem;
+$f_16:1.6rem;
+$f_12:1.2rem;
+$w1:100%;
+$w24:2.4rem;
+$w20:2rem;
+$p_r:relative;
+$p_a:absolute;
+$f_l:left;
+$f_r:right;
+body{
+	font-family:$f_xh;
+	color: $c_b;
+}
+title{
+	text-align: center;
+}
+@mixin b_r($radius){
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	-o-border-radius: $radius;
+	border-radius: $radius;
+}
+@mixin trans($style:all,$sec:.25s){
+	transition: $style $sec;
+	-moz-transition: $style $sec; 
+	-webkit-transition: $style $sec; 
+	-o-transition: $style $sec;
+}
+@mixin opacity($op:$op,$isSupportIE:false){
+	opacity: $op;
+	@if $isSupportIE{
+		filter:alpha(opacity=$op*100);
+	}
+	@include trans;
+}
+
+@mixin a_s($color:$pri_c,$colorHover:$color,$decoration:none){
+	color: $color;
+	&:hover,&.active{
+		color:$colorHover;
+		text-decoration: $decoration;
+	}
+}
+
+@mixin mod_hd($padding,$background:none,$color:$b_c,$titSize:22px,$moreSize:28px){
+	padding: $padding;
+	background: $background;
+	font:{
+		size:$titSize;
+		family:$f_yh;
+	}
+	color:$color;
+	line-height:22px;
+	.more{
+
+		float: right;
+		font-family: $f_s;
+		font-size: $moreSize;
+		@include a_s($color,none);
+	}
+}
+@mixin ico_txt($margin:0 7px,$fontSize:14px,$color:$pri_c,$lineHeight:35px,$decoration:none,$hoverBold:bold){
+	font-size:$fontSize;
+	line-height: $lineHeight;
+	.ico-n{
+		margin: $margin;
+	}
+	a{
+		display: block;
+		width: 100%;
+		@extend .txt-cut;
+		@include a_s($color,$decoration);
+		&:hover,&.active{
+			font-weight:$hoverBold;
+		}
+	}
+}
+@mixin pic_ls_float($marginLeft,$liWidth){
+	margin-left: -$marginLeft;
+	li{
+		float: left;
+		_display:inline;
+		margin-left: $marginLeft;
+		width: $liWidth;
+	}
+}
+@mixin fontS($family:$f_s,$size:14px,$weight:bold,$color:$b_c,$decoration:underline){
+	font:{
+		family:$family;
+		size:$size;
+		weight:$weight;
+	}
+	@include a_s($color,$decoration);
+	a{
+		@include a_s($color,$decoration);
+	}
+}
+$bg_pr:"../statics/img/";
+
+html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, menu, nav, section, time, mark, audio, video, details, summary {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font-weight: normal;
+	vertical-align: baseline;
+	background: transparent;
+	list-style: none;
+}
+
+article, aside, figure, footer, header, nav, section, details, summary {display: block;}
+
+html {
+	font-size:62.5%;
+	box-sizing: border-box;
+}
+
+*, 
+*:before, 
+*:after {
+	box-sizing: inherit;
+}
+
+img,
+object,
+embed {max-width: 100%;}
+
+/* we use a lot of ULs that aren't bulleted. 
+	don't forget to restore the bullets within content. */
+ul {list-style: none;}
+
+blockquote, q {quotes: none;}
+
+blockquote:before, 
+blockquote:after, 
+q:before, 
+q:after {content: ''; content: none;}
+
+a {margin: 0; padding: 0; font-size: 100%; vertical-align: baseline; background: transparent;}
+
+del {text-decoration: line-through;}
+
+em{font-style: normal;}
+
+abbr[title], dfn[title] {border-bottom: 1px dotted #000; cursor: help;}
+
+/* tables still need cellspacing="0" in the markup */
+table {border-collapse: collapse; border-spacing: 0;}
+th {font-weight: bold; vertical-align: bottom;}
+td {font-weight: normal; vertical-align: top;}
+
+hr {display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;}
+
+input, select {vertical-align: middle;}
+
+pre {
+    white-space: pre; /* CSS2 */
+    white-space: pre-wrap; /* CSS 2.1 */
+    white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+    word-wrap: break-word; /* IE */
+}
+
+input[type="radio"] {vertical-align: text-bottom;}
+input[type="checkbox"] {vertical-align: bottom;}
+
+select, input, textarea {font: 99% sans-serif;}
+
+table {font-size: inherit; font: 100%;}
+
+small {font-size: 85%;}
+
+strong {font-weight: bold;}
+
+td, td img {vertical-align: top;} 
+
+/* Make sure sup and sub don't mess with your line-heights http://gist.github.com/413930 */
+sub, sup {font-size: 75%; line-height: 0; position: relative;}
+sup {top: -0.5em;}
+sub {bottom: -0.25em;}
+
+/* standardize any monospaced elements */
+pre, code, kbd, samp {font-family: monospace, sans-serif;}
+
+/* hand cursor on clickable elements */
+.clickable,
+label, 
+input[type=button], 
+input[type=submit], 
+input[type=file], 
+button {cursor: pointer;}
+
+/* Webkit browsers add a 2px margin outside the chrome of form elements */
+button, input, select, textarea {margin: 0;}
+
+/* make buttons play nice in IE */
+//button,
+//input[type=button] {width: auto; overflow: visible;}
+
+/* let's clear some floats */
+.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }  
+.clearfix:after { clear: both; }  
+.clearfix { zoom: 1; }
+
+.c-txt{display:block;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; -webkit-line-clamp: 2;line-clamp:2}
+/* pub */
+body{
+	width: 100%;
+	color: $pri_c;
+	font-family: /*$f_xh,*/$f_yh,$f_s;
+}
+
+a{
+	text-decoration: none;
+	@include a_s($pri_c);
+}
+
+.rl{
+	position: relative;
+}
+.ab{
+	position: absolute;
+	display:block;
+}
+.ab-e{
+	@extend .ab;
+	content: '';
+}
+
+.fb{
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	display: -webkit-box;
+	display: -moz-box;
+	display: box;
+}
+
+.fb-ch-1{
+	display: block;
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	box-flex: 1;
+	-webkit-flex:1;
+	-moz-flex: 1;
+	flex: 1;
+}
+.tc{text-align: center;}
+/*lun bo tu yang shi*/
+.leftTabBox .hd ul .on{
+	background-color: $c_w;
+}
+.leftTabBox{
+	position: relative;
+	.bd ul{
+		width: 100%;
+		img{
+			width: 100%;
+		}
+	}
+	.hd ul{
+		position: absolute;
+		width: 17%;
+		left: 42%;
+		top: 89%;
+		z-index: 5;
+		li{
+			width: 0.7rem;
+			height: 0.7rem;
+			background-color:gray;
+			text-align: center;
+			float: left;
+			margin-right: 1.3rem;
+			@include b_r(50%)
+		}
+		li:last-child{
+			margin-right: 0;
+		}
+	}
+}
+/*nav dang hang lan de yang shi*/
+.nav{
+	font-size: $f_12;
+	width: 100%;
+	overflow: hidden;
+	position: fixed;
+	bottom: 0;
+	background-color: white;
+	padding: 0.4rem 0 0.2rem 0;
+	border-top: 1px solid $c_bg;
+	img{
+		width: $w24;
+	}
+	.colo{
+		color:$c_g;
+	}
+	dl{
+		float: left;
+		text-align: center;
+		width: 25%;
+		dd a{
+			color: $c_a;
+		}
+	}
+}
+/* headFace */
+.headPhoto{
+	width: 7rem;
+	height: 7rem;
+	border-radius: 50%;
+	float: $f_l;
+}
+.introduce2{
+	padding: 0.6rem 1rem;
+	img{
+		float: right;
+		width: 0.7rem;
+		margin-right: 1rem;
+		margin-top: 6%;
+	}
+	a{
+		float: right;
+	}
+}
+.doctor_evaluation{
+	background-color: $c_w;
+	padding: 1rem;
+	dl{
+		@extend .clearfix;
+		border-bottom: 1px solid $c_bg;
+		margin-bottom: 1rem;
+		padding-bottom: 0.8rem;
+		dt{
+			float:$f_l;
+			margin-right: 0.8rem;
+			img{
+				width: 5rem;
+				height: 5rem;
+				border-radius: 50%;
+			}
+		}
+		.inform {
+			margin: 3px 0 -5px;
+			span{
+				float: $f_r;
+			}
+		}
+		dd{
+			margin-left: 22%;
+			line-height: 2.8rem;
+		}
+	}
+	dl:last-child{
+		border-bottom: none;
+	}
+}
+.btn{
+	font-size: 1.4rem;
+	color: white;
+	width: 80%;
+	height: 43px;
+	background: #57d1a8;
+	border: none;
+	border-radius: 2.2rem;
+	margin: 3rem 10% 3rem;
+}
+.patientBg{
+	width: 100%;
+	height: 100%;
+	background-color: $c_bg;
+}
+textarea{
+	outline: none;
+	line-height: 2.4rem;
+	padding: 1rem;
+	resize: none;
+	width: 100%;
+	border: 1px solid $c_f;
+}
+.logo_bottom{
+	text-align: center;
+	margin-top: 4rem;
+	font-size: $f_13;
+	color: black;
+}
+.search{
+	font-size: $f_13;
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	top: 0.5rem;
+	opacity: 0.8;
+	input{
+		width: 70%;
+		border-radius: 19px;
+		border: none;
+		height: 3.5rem;
+		margin-left: 15%;
+		text-indent: 31px;
+		background-color: $c_bg;
+	}
+	span{
+		position: absolute;
+		left: 18%;
+		top:9px;
+	}
+	strong{
+		font-weight: 100;
+		position: absolute;
+		top:9px;
+		right: 3%;
+		font-size: $f_14;
+	}
+	.search_blue{
+		color:black;
+	}
+	em{
+		position: absolute;
+		left: 1px;
+		top: -2px;
+		width: 40px;
+		height: 40px;
+		text-align: center;
+		line-height: 45px;
+		img{
+			transform: rotate(180deg);
+			width: 1rem;
+		}
+	}
+}
+input{
+	outline: none;
+	-webkit-appearance: none;
+}
+.fanhui{
+	width: 1rem;
+	position: relative;
+	top: 1.5rem;
+	left: 2rem;
+	transform: rotate(180deg);
+	float: left;
+	color: black;
+}
+.insurance{
+	text-align: center;
+	margin: 1rem 0 2rem 0;
+	img{
+		width: 4rem;
+		height: 1.5rem;
+	}
+}
+/* head return */
+.top{
+	font-size: 16px;
+	color: $c_f;
+	background-color: white;
+	width: 100%;
+	text-align: center;
+	padding: 1.2rem 1rem;
+	border-bottom: 1px solid $c_f;
+	position: fixed;
+	top: 0;
+	z-index: 1000;
+	.activity_title{
+		width: 80%;
+		margin-left: 10%;
+	}
+	em{
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		left: 2px;
+		top: 4px;
+		text-align: center;
+		line-height: 40px;
+		img{
+			width: 1rem;
+			transform: rotate(180deg);
+		}
+	}
+}
+.no_more{
+	color: $f_13;
+	font-size: $f_13;
+	text-align: center;
+	margin: 2rem 0 1rem 0;
+}
+.marTop{
+	margin-top: 4rem;
+}
+.marTop5{
+	margin-top: 4.4rem;
+}
+a{
+	outline: none;
+	color: #A4A4A4;
+}
+input,textarea{
+	outline: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+#logo{
+	display: block;
+	background: url("../../statics/img/map.png") 0 0 no-repeat;
+	background-size: contain;
+	margin: auto;
+	width: 6rem;
+	height: 6rem;
+}
+a,button,input{-webkit-tap-highlight-color:rgba(255,0,0,0);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

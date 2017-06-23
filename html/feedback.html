@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>帮助和反馈</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>帮助和反馈</span>
+</div>
+    <div class="container3 marTop5 feedBack">
+        <div class="fankui">
+            <h3>问题和意见</h3>
+            <section id="proArea">
+                <textarea name="" id="feedback" cols="30" rows="10" placeholder="请详细叙述你的问题和建议"></textarea>
+            </section>
+             <!-- <section id="picBox">
+                <span id="imgBox"></span>
+                 <div class="add_picture" id="container">
+                   <a class="add_photo" id="pickfiles" href="#"></a>
+                 </div>   
+            </section>  -->
+            <section id="picBox" class="feedPic">
+               <span id="imgBox"></span>
+               <div class="add_picture" id="container">
+                    <a class="add_photo" id="pickfiles" href="#"></a>
+                </div>
+                <div class="picTips">
+                  添加症状图片或检查图片&nbsp;&nbsp;帮助医生更好的判断
+                </div>
+            </section>
+        </div>
+        <div class="reminder" style="margin-top: 6rem">
+            <p class="rem">温馨提醒:</p>
+            <h3> 问题处理完成后，会反馈到消息中，请注意查收 </h3>
+            <input type="button" value="提交" class="btn" id="fkSub">
+        </div>
+    </div>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/plupload.full.min.js"></script>
+<script src="../statics/js/common/qiniu.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script id="fBack" type="text/html">
+    <p>
+      <%for(var i=0;i<tags.length;i++){%>
+        <span data-ftagId="<%=tags[i].id%>"><%=tags[i].name%></span>
+      <%}%>
+    </p>
+</script>
+<script id="fImg" type="text/html">
+</script>
+<script type="text/javascript">
+$(function(){
+    var $imgBox = $('#imgBox');
+    var $proArea = $('#proArea');
+    var bt = baidu.template;
+    var upPicToken;
+    var yuming;
+    var imgArr=[];
+    var tagJson = {};
+    var tagArr = [];
+    var problemUrl = window.YLZ.base+'com/problems/tags?token='+localStorage.getItem("userToken1");
+    //初始化常见问题标签
+    $.ajax({
+       type:'get',
+       url: problemUrl,
+       data:{
+          
+       },
+       success:function(data){
+          var p1 = bt('fBack',data);
+          $proArea.append(p1); 
+        
+       }
+    });
+    //上传token获取
+    var qnUpTokenUrl = window.YLZ.base+'com/token/qiniu/uptoken?bucket=ylzyyy&token='+localStorage.getItem("userToken1");
+    $.ajax({
+      type:'get',
+      url:qnUpTokenUrl,
+      data:{
+
+      },
+      success:function(data){
+         upPicToken = data.token;
+         yuming = data.domain;
+              //上传
+         var uploader = Qiniu.uploader({
+             runtimes: 'html5,flash,html4', 
+             browse_button: 'pickfiles',  
+             uptoken : upPicToken, 
+              unique_names: true,
+              domain: 'yyy-pat', 
+              get_new_uptoken: false,  
+              container: 'container',             
+              max_file_size: '100mb',          
+              flash_swf_url: 'js/plupload/Moxie.swf',  
+              max_retries: 333333,                    
+              dragdrop: true,                    
+              drop_element: 'container',          
+              chunk_size: '0mb',                 
+              auto_start: true,
+              resize:{
+                crop:true,
+                quality:60,
+                preserve_headers:false
+              },                        
+              init: {
+                  'FilesAdded': function(up, files) {
+                      plupload.each(files, function(file) {
+                          // 文件添加进队列后，处理相关的事情
+                      });
+                  },
+                  'BeforeUpload': function(up, file) {
+                         // 每个文件上传前，处理相关的事情
+                  },
+                  'UploadProgress': function(up, file) {
+                         // 每个文件上传时，处理相关的事情
+                  },
+                  'FileUploaded': function(up, file, info) {
+                         // 每个文件上传成功后，处理相关的事情
+                         // 其中info是文件上传成功后，服务端返回的json，形式如：
+                         // {
+                         //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
+                         //    "key": "gogopher.jpg"
+                         //  }
+                         // 查看简单反馈
+                         var domain = up.getOption('domain');
+                         var res = JSON.parse(info);
+                         var sourceLink = yuming+'/' + res.key; //获取上传成功后的文件的Url
+                         $imgBox.append('<img class="sPhoto" src="http://'+sourceLink+'?imageMogr2/thumbnail/500x" alt="">');
+                         imgArr.push($imgBox.find(".sPhoto").last().attr("src"));
+                  },
+                  'Error': function(up, err, errTip) {
+                         //上传出错时，处理相关的事情
+                  },
+                  'UploadComplete': function() {
+                         //队列文件处理完毕后，处理相关的事情
+                  },
+                  'Key': function(up, file) {
+                      // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+                      // 该配置必须要在unique_names: false，save_key: false时才生效
+
+                      var key = "";
+                      // do something with key here
+                      return key
+                  }
+              }
+          });
+        }
+    });
+    
+    //提交患者端的问题反馈
+    
+    var patientUrl = window.YLZ.base+'com/problems?token='+localStorage.getItem("userToken1");
+    $proArea.on('click','span',function(){
+      var that = $(this);
+      if(that.hasClass('on')){
+        that.removeClass('on');
+      }else{
+        that.addClass('on');
+      }
+    });
+    $('#fkSub').on('click',function(){
+      var feedback = $('#feedback').val();
+    for(var i=0;i<6;i++){
+        if($('#proArea span').eq(i).hasClass('on')){
+            var tid = $('#proArea span').eq(i).attr('data-ftagId'),
+                    val =$('#proArea span').eq(i).text();
+            tagJson = {"id":tid,"name":val};
+            tagArr.push(tagJson);
+        }
+    }
+      //debugger;
+        //先验证
+        if(feedback==""){
+          alert('请填写表单内容');
+          return false;
+        }
+         $.ajax({
+           type:'post',
+           contentType: "application/json; charset=utf-8",
+           dataType: "json",
+           url: patientUrl,
+           data:JSON.stringify({
+              "content":feedback,
+              "userId":localStorage.getItem("userId"),
+              "devType":"pat",
+              "tags":tagArr,
+              "images":imgArr
+           }),
+           success:function(data){
+              if(data.result.code==0){
+                location.href="my_Introduce.html";
+              }
+           }
+        });
+    });
+});
+</script>
+</body>
+</html>

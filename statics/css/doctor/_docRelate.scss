@@ -1,0 +1,444 @@
+/* my doctor */
+.myContent{
+  width: 100%;
+  padding: 0 1.5rem;
+  font-size: $f_13;
+  color: $c_b;
+  .mc{
+    width: 100%;
+    height: auto;
+    border: 1px solid $c_bg;
+    display: -webkit-box;
+    word-wrap: break-word;
+    padding-bottom: 0.8rem;
+    margin-top: 0.9rem;
+    border-radius: 1rem;
+    position: $p_r;
+    .info{
+      position: absolute;
+      top: 3.4rem;
+      right: 1.4rem;
+      background-color: red;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 17px;
+      color: #fff;
+      font-size: 1rem;
+    }
+    .address{
+      margin-bottom: 1rem;
+    }
+  }
+  .data{
+    position: absolute;
+    right: 7px;
+    top: 11px;
+  }
+  img{
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    float: left;
+    margin: 1rem;
+  }
+  .content{
+    width: 76%;
+  }
+  h4{
+    margin-top: 1rem;
+    margin-bottom: 0.7rem;
+  }
+  li:last-child{
+    margin: 2rem auto;
+  }
+}
+h5{
+  font-size:$f_12;
+  text-align: center;
+  margin-top: -0.8rem;
+  margin-bottom: 3rem;
+}
+.more{
+  text-align: center;
+  margin:0 auto 5rem;
+  img{
+    width: 4rem;
+  }
+}
+.my_doc{
+  span{
+    width: 50%;
+    display: inline-block;
+    //background-color: #57d1a8;
+    text-align: center;
+    height: 4rem;
+    line-height: 4rem;
+    font-size: 1.4rem;
+    border: 1px solid #57d1a8;
+  }
+  span:last-child{
+    float: left;
+  }
+  .my_doctor{
+    background-color: #57d1a8;
+    color: white;
+  }
+}
+/* team hpmepage */
+.tP{
+  color: $c_b;
+  h2{
+    text-align: center;
+    line-height: 4.5rem;
+    font-size: $f_14;
+    background-color:$c_w;
+  }
+  .team_member{
+    @extend .clearfix;
+    background-color: $c_w;
+    margin: 0 0 1.5rem 0;
+    padding: 1rem 0;
+    dl{
+      float: $f_l;
+      width: 25%;
+      text-align: center;
+    }
+    img{
+      width: 6rem;
+      height: 6rem;
+      border-radius: 50%;
+    }
+  }
+  .team_int{
+    background-color: $c_w;
+    padding: 1rem;
+    font-size: $f_13;
+    line-height: 2.5rem;
+    p{
+      text-indent: $w24;
+    }
+  }
+}
+/* evaluate page */
+.eP{
+  padding: 1.5rem;
+  font-size: $f_14;
+  dl{
+    @extend .clearfix;
+    color: $c_b;
+    dt{
+      float: $f_l;
+      margin-right: 1rem;
+      img{
+        width:6rem;
+        height:6rem;
+        border-radius: 50%;
+      }
+    }
+  }
+  .line1 {
+    span{
+      display: inline-block;
+      width: 100%;
+      height: 1px;
+      border: 1px solid $c_bg;
+    }
+    a{
+      position: relative;
+      color: #b6b6b6;
+      background-color: white;
+      top: -1.4rem;
+      left: 30%;
+      padding: 0 0.5rem;
+      width: 40%;
+      display: inline-block;
+      text-align: center;
+    }
+  }
+  strong{
+    float: $f_r;
+    color: $c_f;
+    font-size: $f_13;
+    margin: -1.7rem 4rem 1rem 0;
+  }
+  .dd1{
+    margin: 0.7rem 0 0.7rem 0;
+  }
+  .star{
+    text-align: center;
+    margin-bottom: 1.5rem;
+    img{
+      width: 3.5rem;
+      margin-right: 1rem;
+    }
+  }
+  textarea{
+    width: 100%;
+    resize: none;
+    border-radius: 1rem;
+  }
+  input{
+    margin-left: 10%;
+    height: 5rem;
+  }
+}
+/* doctor evaluate */
+.doctor_evaluation{
+  font-size: $f_13;
+  .img {
+    img{
+      width: 1.2rem;
+    }
+  }
+  dd{
+    margin-left: 22%;
+    .eva_time{
+      float: right;
+      margin-right: 2rem;
+    }
+  }
+  p{
+    text-indent: 20px;
+  }
+}
+
+/* hospital page */
+#leftTabBox{
+  background-color: white;
+  .bd ul dl{
+    float: left;
+    font-size:1.2rem;
+    text-align: center;
+    width:25%;
+  }
+  img{
+    width: 35px;border-radius: 50%;height: 35px;
+  }
+}
+.marLR{
+  margin: 0 1rem 0 0.5rem;
+}
+#leftTabBox2 img{
+  width: 100%;
+}
+.hospital_map{
+  font-size: $f_14;
+  background-color: $c_w;
+  padding: 0.4rem;
+  position:$p_r;
+  margin: $p_6 0;
+  img{
+    width: 20px ;
+    position: relative;
+    top: $p_6;
+    left: 1rem;
+  }
+  .address{
+    margin: 0 8% 0 5%;
+    position: relative;
+    top: 5px;
+    left: 11px;
+  }
+  .line{
+    font-size:24px;
+    margin-right: -2.6rem;
+  }
+  .tel{
+    font-size: 1rem;
+    background-color: red;
+    position: relative;
+    left: 29px;
+    opacity: 0;
+    z-index: 5;
+    top: -1rem;
+    height: 2rem;
+    display: inline-block;
+  }
+}
+.certificate {
+  color: $c_b;
+  overflow: hidden;
+  padding:1rem 1rem 0 1rem;
+  font-size: $f_12;
+  background-color: white;
+  position: relative;
+  span{
+    position: $p_r;
+    top: -0.5rem;
+  }
+  img{
+    width: 3rem;
+    height: 2rem;
+  }
+  li{
+    margin: $p_6 0;
+  }
+  .inter_certifi{
+    height: 2.3rem;
+    overflow: hidden;
+  }
+  .hospital_type span{
+    border: 1px solid $c_bg;
+    padding: $p_6;
+    margin-right: 1rem;
+    font-size: $f_13;border-radius: 0.7rem;
+  }
+  li:last-child{
+    height: 2.3rem;
+    line-height: 3rem;
+  }
+}
+#hos_down{
+  position: absolute;
+  right: 1.6rem;
+  top: 1rem;
+  img{
+    width: 7px;
+    height: 11px;
+    transform: rotate(90deg);
+    position: relative;
+    top: 2px;
+    margin-left: 10px;
+  }
+}
+.introduce{
+  font-size: $f_12;
+  color: $c_b;
+  background-color: $c_w;
+  margin:$p_6 0;
+  padding:0.8rem;
+  position: relative;
+  em{
+    @extend #hos_down;
+    b{
+      font-size: 13px;
+    }
+  }
+  h3{
+    font-size: $f_14;
+    text-align: center;
+  }
+  dl{
+    @extend .clearfix;
+  }
+  dt{
+    float: $f_l;
+    height: 1.8rem;
+  }
+  dd{
+    margin-left: 6rem;
+    height: 1.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  dd:last-child{
+    line-height: 16px;
+  }
+}
+.mor{
+  margin-right: 2rem;
+  margin-top: -16px;
+  float: right;
+  color:#585858;
+  img{
+    width:7px;
+  }
+}
+.recExp{
+  color: $c_b;
+  padding: 6px;
+  background-color: $c_w;
+  p:first-child{
+    font-size: $f_14;
+    margin-bottom: 7px;
+    .mor{
+      margin: 0 0.5rem 0 0;
+    }
+  }
+}
+.clip_t{
+  width: 58%;
+  overflow: hidden;
+  height: 2rem;
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* doctor homepage */
+.attention{
+  position:absolute;
+  right: 1rem;
+  top: 7rem;
+  span{
+    font-size: $f_12;
+    border: 1px solid $c_g;
+    color:$c_g ;
+    padding:4px 8px;
+  }
+}
+.malr{
+  margin: 0 1rem;
+}
+.dP_top{
+  color: $c_b;
+  background-color: $c_w;
+  font-size: $f_13;
+  @extend .clearfix;
+  padding: 10px;
+  dd{
+    margin-left: 27%;
+    margin-top: 1rem;
+    img{
+      width: $f_14;
+    }
+  }
+  dd:last-child{
+    font-size: $f_12;
+  }
+}
+.enquiry{
+  @extend .clearfix;
+  padding: 10px;
+  margin-top: $p_6;
+  background-color: $c_w;
+  li{
+    width: 50%;
+    float: $f_l;
+    margin-bottom: 10px;
+    span{
+      margin-left: $w24;
+    }
+  }
+  li:last-child{
+    width: 88%;
+    text-align: center;
+    height: 32px;
+    border: 1px solid $c_g;
+    line-height: 32px;
+    border-radius: 23px;
+    color: $c_g;
+    margin-left: 6%;
+    margin-top: 10px;
+    font-size: 16px;
+  }
+}
+.intro{
+  background-color: $c_w;
+  text-indent: 20px;
+  padding: $f_12;
+  height:53px;
+  overflow: hidden;
+  line-height: 20px;
+}
+.upfold{
+  float: right;
+  em{
+    margin-right: 1rem;
+  }
+  img{
+    transform: rotate(90deg);
+  }
+}

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <title>对话</title>
+    <link rel="stylesheet" href="css/chat.css">
+    <style>
+        #box{width: 54px;height: 60px;display: none}
+        .box1{width: 54px; height: 54px; position: absolute; left: 42%; top: 66px; /* background: #333; */}
+        .box1 div:nth-child(1){
+            width: 50px; height: 50px;
+            border:2px solid #56D1A8;
+            border-radius: 50%;
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            -webkit-animation:rotate 1s ease-out infinite;
+        }
+        .box1 div:nth-child(2){
+            width: 20px; height: 20px;
+            border:2px solid #56D1A8;
+            border-radius: 50%;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            position: absolute; left: 15px; top: 15px;
+            -webkit-animation:rotate 0.5s ease-out infinite reverse;
+        }
+        @-webkit-keyframes rotate{
+            0%{-webkit-transform: rotate(0deg) scale(1);}
+            50%{-webkit-transform: rotate(180deg) scale(0.7);}
+            100%{-webkit-transform: rotate(360deg) scale(1);}
+        }
+        #department{
+            font-size: 12px;
+            position: relative;
+            top: -11px;
+        }
+        #chat_content li .imgBg img{width: 8.2rem}
+        .lt a{
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="geoPosition whiteBg">
+        <em  id="chat_back">
+            <a class="backBtn" href="javascript:void(0)"></a>
+        </em>
+        <h3 class="nameDoc"><span id="chat_name"></span><br><span class="chat_expert"></span>&nbsp;&nbsp;<span id="department"></span></h3>
+        <em class="perSign" id="perSign"></em>
+    </div>
+</header>
+<main>
+    <div id="chatCon" class="chatCon clearfix" style="position: absolute;top: 55px;bottom: 55px;-webkit-overflow-scrolling: touch;overflow-y: auto;width: 100%;left: 0;right: 0;padding: 0">
+        <div id="box">
+            <div class="box1">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <ul class="clearfix" id="chat_content" style="padding: 0 1rem;height: auto">
+            <li class="rt">
+                <a href="#" class="facePic">
+                    <img src="http://placehold.it/40x40" alt="">
+                </a>
+                <div class="commt">同居</div>
+            </li>
+            <li class="lt">
+                <a href="#" class="facePic">
+                    <img src="http://placehold.it/40x40" alt="">
+                </a>
+                 <div class="commt">好好回家</div>
+            </li>
+            <li class="lt">
+                <a href="#">
+                    <img src="http://placehold.it/50x50" alt="">
+                </a>
+                <div class="commt imgBg">
+                    <img class="imgSmall" src="http://rongcloud-image.ronghub.com/image_jpeg__RC-2016-11-25_596_1480066536812?e=2147483647&amp;token=livk5rb3__JZjCtEiMxXpQ8QscLxbNLehwhHySnX:DmZZnaZwSnqTT33ow5ZofGShIAA=" alt="">
+                </div>
+            </li>
+            <li class="rt">
+                <a href="#">
+                    <img src="http://placehold.it/50x50" style="float: right" >
+                </a>
+                <div class="commt imgBg">
+                    <img class="imgSmall" src="http://rongcloud-image.ronghub.com/image_jpeg__RC-2016-11-25_596_1480066536812?e=2147483647&amp;token=livk5rb3__JZjCtEiMxXpQ8QscLxbNLehwhHySnX:DmZZnaZwSnqTT33ow5ZofGShIAA=" alt="">
+                </div>
+            </li>
+            <li class="rt">
+                <a href="#">
+                    <img src="http://placehold.it/50x50" style="float: right" >
+                </a>
+                <div class="commt imgBg">
+                    <img class="imgSmall" src="http://rongcloud-image.ronghub.com/image_jpeg__RC-2016-11-25_596_1480066536812?e=2147483647&amp;token=livk5rb3__JZjCtEiMxXpQ8QscLxbNLehwhHySnX:DmZZnaZwSnqTT33ow5ZofGShIAA=" alt="">
+                </div>
+            </li>
+            <li class="rt">
+                <a href="#">
+                    <img src="http://placehold.it/50x50" style="float: right" >
+                </a>
+                <div class="commt imgBg">
+                    <img class="imgSmall" src="http://rongcloud-image.ronghub.com/image_jpeg__RC-2016-11-25_596_1480066536812?e=2147483647&amp;token=livk5rb3__JZjCtEiMxXpQ8QscLxbNLehwhHySnX:DmZZnaZwSnqTT33ow5ZofGShIAA=" alt="">
+                </div>
+            </li>
+            <!--<li class="rt">-->
+            <!--<a href="#">-->
+            <!--<img src="http://placehold.it/50x50" alt="">-->
+            <!--</a>-->
+            <!--<div class="commt">-->
+            <!--在的呢~-->
+            <!--</div>-->
+            <!--</li>-->
+            <!--<li class="rt">-->
+            <!--<a href="#">-->
+            <!--<img src="http://placehold.it/50x50" alt="">-->
+            <!--</a>-->
+            <!--<div class="commt">-->
+            <!--在的呢~-->
+            <!--</div>-->
+            <!--</li>-->
+            <!--<li class="rt">-->
+            <!--<a href="#">-->
+            <!--<img src="http://placehold.it/50x50" alt="">-->
+            <!--</a>-->
+            <!--<div class="commt">-->
+            <!--在的呢~-->
+            <!--</div>-->
+            <!--</li>-->
+        </ul>
+        <!--<h2 class="more"></h2>-->
+        <!--<h2 class="no_more"></h2>-->
+    </div>
+</main>
+<footer>
+    <div id="btnBox" class="importArea" style="position: fixed;left: 0;right: 0;bottom: 0;background-color: white;">
+        <div class="chat_send">
+           <span class="uploadArea" id="send_photp">
+              <input type="file" id="portrait" class="upPic" capture="camera">
+              <img class="sendPhoto" src="../statics/img/sendPic.png">
+          </span>
+            <input type="text" id="msgIpt" class="inp">
+            <input type="button" value="发送" class="send">
+        </div>
+        <!--  <img id="" src="img/record.jpg" alt="录音"> -->
+    </div>
+</footer>
+
+<div class="emoji_div">
+
+</div>
+<script src="../statics/js/common/jquery-1.7.2.min.js"></script>
+<!--<script src="http://cdn.ronghub.com/RongIMLib-2.2.4.min.js"></script>-->
+<!--<script  type="text/javascript" src="../statics/js/common/moxie.min.js"></script>-->
+<!--<script type="text/javascript" src="../statics/js/common/plupload.dev.js"></script>-->
+<!--<script type="text/javascript" src="../statics/js/common/qiniu.js"></script>-->
+<!--<script type="text/javascript" src="../statics/js/common/jweixin-1.0.0.js"></script>-->
+<!--<script type="text/javascript" src="../statics/js/common/RongEmoji-2.2.4.min.js"></script>-->
+<!--<script src="../statics/js/common/basic.js"></script>-->
+<script>
+    (function(window,undefined){
+        setTimeout(aa,3000);
+        function aa(){
+            var a=$('#chat_content').height();
+            console.log(a);
+            var b=$(window).height();
+            $('#chatCon').scrollTop(a-b)
+        }
+    })(window);
+//    $.(function(){
+//
+//    });
+//    $('#chat_content').height(1060);
+//    console.log($('#chatCon').height());
+//    console.log($('#chat_content').height());
+//    console.log($(window).height());
+
+
+
+</script>
+</body>
+</html>

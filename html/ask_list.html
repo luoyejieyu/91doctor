@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>提问列表</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body class="background">
+  <div class="top">
+      <em>
+          <img src="../statics/img/enter.png" alt="">
+      </em>
+      <span>提问列表</span>
+  </div>
+    <ul class="aL marTop5" id="questionList">
+       <!-- <li>
+           <h3><strong>2016-10-07</strong><a href="" class="look">查看解答</a></h3>
+           <p><span>张三</span><span>男</span><span>29岁</span><span>外科</span></p><br>
+           <p>我肚子疼，已经持续了一个多星期了</p>
+       </li>
+        <li>
+            <h3><strong>2016-10-07</strong><a href="" class="noSolve">未解决</a></h3>
+            <p><span>张三</span><span>男</span><span>29岁</span><span>外科</span></p><br>
+            <p>我肚子疼，已经持续了一个多星期了</p>
+        </li> -->
+    </ul>
+    <div class="footer">
+    </div>
+    <input id="pageHid" class="pageHid" type="hidden" value="1">
+    <input id="sizeHid" class="sizeHid" type="hidden" value="3">
+    <p class="logo_bottom">
+        杏林医院 <img src="../statics/img/map.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 值得信赖的互联网医院
+    </p>
+    <script src="../statics/js/common/zepto.min.js"></script>
+    <script src="../statics/js/common/baidu_template.js"></script>
+    <script src="../statics/js/common/basic.js"></script>
+
+    <script id="qulistTpl" type="text/html">
+    <%for(var i=0;i<qas.length;i++){%>
+        <li data-qasid="<%=qas[i].qaId%>">
+           <h3><strong><%=qas[i].date%></strong>
+           <%if(qas[i].status==1){%>
+                <a href="javascript:void(0)" class="look">查看解答</a>
+           <%}else if(qas[i].status==0){%>
+                <a href="javascript:void(0)" class="noSolve">未解决</a>
+           <%}%>
+           </h3>
+           <p><%=qas[i].content%></p>
+       </li>
+    <%}%>
+    </script>
+    <script type="text/javascript">
+    $(function(){
+        var $questionList= $('#questionList');
+        var bt = baidu.template;
+        var pageNum=$('#pageHid').val();
+        var pageSize=$('#sizeHid').val();
+        var quListUrl;
+        loadPage(pageNum,pageSize);
+                           
+        //查询问题列表
+         function loadPage(page,size){
+              $.ajax({
+               type:'get',
+               url: quListUrl(page,size),
+               data:{
+                  
+               },
+               success:function(data){
+                var html1 = bt('qulistTpl',data);
+                debugger;
+                $('#questionList').append(html1);
+                 
+                 if(data.qas.length<size){
+                  debugger;
+                    $('.footer').html('<p>没有更多了</p>');
+                 }else{
+                   $('.footer').html('<a id="loadMore">查看更多保险</a>'); 
+                   pageNum++;
+                 }
+                 //点击事件
+                 $('#questionList').on('click','li',function(){
+                    var that = $(this);
+                    localStorage.setItem("qasid",that.data('qasid'));
+                    location.href='ask_detail.html';
+                 });
+               }
+            });
+        }
+        function quListUrl(page,size,sort){
+            return  window.YLZ.base+'pat/qalists?token='+window.YLZ.token+'&sort=&page='+page+'&size='+size;
+        }
+        $('.footer').on('click','#loadMore',function(){
+            loadPage(pageNum,pageSize);
+        });
+    });
+    </script>
+</body>
+</html>

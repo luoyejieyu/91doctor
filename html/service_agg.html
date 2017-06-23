@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>杏林医院软件保单协议</title>
+</head>
+<style>
+    body{
+        font-size: 0.4rem;margin: 0;padding: 0;
+    }
+    .top{
+        height: 47px;
+        background-color: white;
+        text-align: center;
+        font-size: 18px;
+        line-height: 53px;
+        color: #A9A9A9;
+        border-bottom: 1px solid #A9A9A9;
+    }
+    .top a{
+        float: left;
+        margin-left: 18px;
+    }
+    .top a img{
+        transform: rotate(180deg);
+        width: 10px;
+    }
+    .container h3{
+        font-weight: bold;font-size: 0.7rem;text-align: center;
+       margin: 0;padding: 0.3125rem 0 0.3125rem 0;
+    }
+    .content{padding: 0.3125rem}
+    .content p:first-child{
+        margin-top: 0.1565rem;
+        font-size: 0.4565rem;
+        font-weight: bold;
+    }
+    .content p{
+        text-indent: 0.625rem;line-height: 0.5625rem;
+        margin-bottom: -0.28125rem;
+    }
+    .content h4{
+        margin: 0.625rem 0 -0.21875rem 0;font-size: 0.46875rem;
+    }
+</style>
+<body>
+<div class="top">
+    <a href="home_page.html">
+        <img src="../statics/img/enter.png" alt="">
+    </a>
+    <span>保险服务</span>
+</div>
+<div class="container marTop5">
+    <h3>杏林云医院软件服务协议</h3>
+    <div class="content">
+        <p> 请仔细阅读本协议，杏林云医院平台将依据以下条件和条款为您提供服务。</p>
+        <div>
+            <h4>一、服务条款的确认</h4>
+            <p>1、用户同意所有注册协议条款并完成注册程序，才能成为杏林云医院的正式用户。</p>
+            <p>2、用户同意本协议的，即视为用户确认自己具有享受本客户端服务等相应的权利能力和行为能力，能够独立承担法律责任。</p>
+            <h4>一、隐私声明</h4>
+            <p>1、适用范围 <br>
+                用户注册“杏林云医生”客户端时，根据网站或客户端要求提供的个人信息，若因用户注册信息不真实
+                而引起的问题及产生的后果，由用户自行承担责任，运营方不承担相应责任；
+            </p>
+        </div>
+    </div>
+
+</div>
+</body>
+<script>
+    (function(win) {
+        var doc = win.document;
+        var docEl = doc.documentElement;
+        var tid;
+
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            if (width > 768) { // 最大宽度
+                width = 768;
+            }
+            var rem = width / 10; // 将屏幕宽度分成10份， 1份为1rem
+            docEl.style.fontSize = rem + 'px';
+            ///rem用font-size:75px来进行换算
+        }
+        win.addEventListener('resize', function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 1);
+        }, false);
+        win.addEventListener('pageshow', function(e) {
+            if (e.persisted) {
+                clearTimeout(tid);
+                tid = setTimeout(refreshRem, 1);
+            }
+        }, false);
+        refreshRem();
+    })(window);
+</script>
+</html>

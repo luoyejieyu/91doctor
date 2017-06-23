@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>相关团队</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+    <div class="top">
+        <em>
+            <img src="../statics/img/enter.png" alt="">
+        </em>
+        <span>相关团队</span>
+    </div>
+    <div class="expert_team marTop5" id="expert_team">
+
+    </div>
+    <p id="more_readoc" class="no_more"></p>
+    <h3 class="no_more" id="no_readoc"></h3>
+    <footer>
+        <div class="footer">
+            <p>
+                <em id="logo"></em><br>
+                值得信赖的互联网医院
+
+            </p>
+        </div>
+    </footer>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/xyfpublic/xyfpublic.js"></script>
+<script>
+    var searchValue=localStorage.getItem('searchvalue');
+    var doctorNum=1;
+    var doctorSize=6;
+    loadPagedoc(doctorNum,doctorSize);
+    var userId=localStorage.getItem('userId');
+    //所有相关团队的列表
+    function loadPagedoc(page,size){
+        $.ajax({
+            type:'get',
+            url: insuranceListUrl(page,size),
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.result.code==0){
+                    cloudFunction.addTeam(data.groups);
+                    if(data.count<=page*size){
+                        $('#no_readoc').html('没有更多了');
+                        $('#more_readoc').html('');
+                    }else{
+                        $('#more_readoc').html('查看更多医生团队');
+                        $('#no_readoc').html('');
+                        doctorNum++;
+                    }
+                }else{
+                    alert('数据加载异常')
+                }
+            }
+        });
+    }
+    function insuranceListUrl(page,size,sort){
+        return  window.YLZ.base+'pat/groups?searchkey='+searchValue+'&token='+localStorage.getItem('userToken')+'&page='+page+'&size='+size;
+    }
+    $('#more_readoc').on('click',function(){
+        loadPagedoc(doctorNum,doctorSize);
+    })
+    //跳转到团队聊天
+    $('#expert_team').on('tap','.free_enquiry',function(){
+        $.ajax({
+            type:'post',
+            contentType:'application/json; charset=utf-8',
+            dataType:'json',
+            data:JSON.stringify({
+                'patId':userId,
+                'groupId':teamId
+            }),
+            url:window.YLZ.base+'com/tempgroups?token='+userToken,
+            success:function(data){
+                localStorage.setItem('doctorTeamId',data.groupId);
+                location.href='flock_chat.html'
+            }
+        })
+    })
+    $('#expert_team').on('tap','dl',function(){
+        localStorage.setItem('teamId',$(this).attr('data-id'));
+        location.href='team_page.html'
+    })
+</script>
+</html>

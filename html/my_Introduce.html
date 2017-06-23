@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>我的</title>
+    <!--<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />-->
+    <!--<meta http-equiv="Pragma" content="no-cache" />-->
+    <!--<meta http-equiv="Expires" content="0" />-->
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+    <div class="container">
+        <div class="my_bac" style="background: url('../statics/img/back.png') 0 0 no-repeat;
+        width: 100%;background-size: cover">
+            <dl class="myName">
+                <dt><img src="../statics/img/patient.jpg" alt=""></dt>
+                <dd id="tel"></dd>
+                <dd id="name" class="c-txt"></dd>
+            </dl>
+            <div class="my_right">
+                <dl>
+                    <dt>
+                        <img src="../statics/img/myEvaluation.png" alt="">
+                    </dt>
+                    <dd>
+                        我的问诊
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>
+                        <img src="../statics/img/my_insure.png" alt="">
+                    </dt>
+                    <dd>
+                        我的保险
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>
+                        <img src="../statics/img/my_ill.png" alt="">
+                    </dt>
+                    <dd>
+                        我的病例
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <ul class="person">
+            <li>
+                <em><img src="../statics/img/personage.png" alt=""></em>
+                <a href="#">个人设置</a>
+                <span><img src="../statics/img/enter.png" alt=""></span>
+            </li>
+            <li>
+                <em><img src="../statics/img/lineHelp.png" alt=""></em>
+                <a href="#">问医生</a>
+                <span><img src="../statics/img/enter.png" alt=""></span>
+            </li>
+            <li>
+                <em><img src="../statics/img/apply.png" alt="" ></em>
+                <a href="#">公益救助</a>
+                <span><img src="../statics/img/enter.png" alt=""></span>
+            </li>
+            <li>
+                <em><img src="../statics/img/problem.png" alt="" ></em>
+                <a href="#">帮助和反馈</a>
+                <span><img src="../statics/img/enter.png" alt=""></span>
+            </li>
+            <li>
+                <em><img src="../statics/img/about_us.png" alt="" ></em>
+                <a href="#">关于我们</a>
+                <span><img src="../statics/img/enter.png" alt=""></span>
+            </li>
+        </ul>
+    </div>
+    <nav class="nav">
+        <dl>
+            <dt><img src="../statics/img/home_b.png" alt=""></dt>
+            <dd>首页</dd>
+        </dl>
+        <dl>
+            <dt><a href="my_doctor.html"><img src="../statics/img/doc_b.png" alt=""></a></dt>
+            <dd><a href="my_doctor.html">医生</a></dd>
+        </dl>
+        <dl>
+            <dt><a href="infor.html"><img src="../statics/img/infa_b.png" alt=""></a></dt>
+            <dd><a href="infor.html">消息</a></dd>
+        </dl>
+        <dl>
+            <dt><a href="my_Introduce.html"><img src="../statics/img/me_g.png" alt=""></a></dt>
+            <dd ><a href="my_Introduce.html" class="colo">我的</a></dd>
+        </dl>
+    </nav>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script>
+    (function(window,undefined){
+        //正式使用
+        var userToken=localStorage.getItem('userToken');
+        var userId=localStorage.getItem('userId');
+        $('.nav dl').eq(0).on('tap',function(){
+            location.href='home_page.html'
+        });
+        //页面的跳转,
+        $('.my_right dl').on('click',function(){
+            var index=$(this).index();
+            if(index==0){
+                window.location.href='my_enquiry.html'
+            }else if(index==1){
+                window.location.href='myGuarantee.html'
+            }
+        });
+        $('.person').on('click','li',function(){
+            var index=$(this).index();
+            if(index==0){
+                window.location.href='personal_set.html'
+            }else if(index==1){
+                window.location.href='online_solve.html'
+            }else if(index==2){
+                window.location.href='economic_aid.html'
+            }else if(index==3){
+                window.location.href='feedback.html'
+            }else if(index==4){
+                window.location.href='about_us.html'
+            }
+        });
+        //ajax请求渲染页面
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'com/pats/'+userId+'?token='+userToken,
+            data:'',
+            success:function(data){
+//                console.log(data)
+                if(data.info.image!=''&&data.info.image!=null){
+                    $('.myName img').attr('src',data.info.image);
+                }
+                if(data.info.name!=''&&data.info.name!=null){
+                    $('#name').html(data.info.name);
+                }
+                if(data.info.phone!=''&&data.info.phone!=null){
+                    $('#tel').html( data.info.phone.substring(0, 3) + "****" + data.info.phone.substring(7, 11));
+                }
+            }
+        })
+    })(window);
+
+</script>
+</html>

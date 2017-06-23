@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>问诊</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body class="background">
+<div class="top" id="doctor_evaluation">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>我的问诊</span>
+</div>
+<section id="diagnoseList" class="marTop5">
+</section>
+<div class="remainInfo">
+</div>
+<input id="pageHid" class="pageHid" type="hidden" value="1">
+<input id="sizeHid" class="sizeHid" type="hidden" value="3">
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/jquery-1.7.2.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+
+<script id="diagnoseListTpl" type="text/html">
+<%for(var i=0;i<askings.length;i++){%>
+  <div class="my_enquiry">
+      <div class="upEnq" data-wzid="<%=askings[i].id%>" data-evastatus="<%=askings[i].scoreStatus%>" data-docid="<%=askings[i].docId%>">
+       <dl>
+         <dt><img src="<%=askings[i].image%>" alt=""></dt>
+         <dd><%=askings[i].name%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=askings[i].department%>
+         <%if(askings[i].askingStatus==1){%>
+              <span class="staus">已完成</span>
+         <%}else if(askings[i].askingStatus==0){%>
+              <span class="staus">未完成</span>
+        <%}%>
+        </dd>
+       </dl>
+        <p><%=askings[i].content%></p>
+      </div>
+      <div class="evaluation">
+         <span><%=askings[i].date%></span>
+         <%if(askings[i].scoreStatus==0){%>
+             <a class="gotoEva" href="#">去评价</a>
+         <%}else if(askings[i].scoreStatus==1){%>
+            <a class="alEval">已评价</a>
+         <%}%>
+      </div>
+    </div>
+<%}%>
+</script>
+<script type="text/javascript">
+$(function(){
+    //正式数据
+    var userToken=localStorage.getItem("userToken1");
+    //var userToken='b154627c8fee4614aae4989795cfb1b0220000000b154627c8fee4614aae4989795cfb1b0';
+    var $diagnoseList = $('#diagnoseList');
+    var bt = baidu.template;
+    var pageNum=$('#pageHid').val();
+    var pageSize=$('#sizeHid').val();
+    var diagnoseListUrl;
+    loadPage(pageNum,pageSize);
+    $('#doctor_evaluation').on('tap',function(){
+        location.href='my_Introduce.html'
+    })
+    //查询问诊记录列表
+    function loadPage(page,size){
+          $.ajax({
+           type:'post',
+           contentType: "application/json; charset=utf-8",
+           dataType: "json",
+           url: diagnoseListUrl(page,size),
+           data:{
+            
+           },
+           success:function(data){
+           //debugger
+             if(data.askings.length==0){
+                $('.remainInfo').html('<p>您现在还没有问诊</p>');
+             }
+             var html1 = bt('diagnoseListTpl',data);
+                $diagnoseList.append(html1);
+             if(data.askings.length<pageSize){
+                $('.remainInfo').html('<p>没有更多了</p>');
+             }else{
+               pageNum++;
+               $('.remainInfo').html('<a id="loadMore">查看更多</a>');
+             }
+            //点击事件
+             $('#diagnoseList').on('click','.upEnq',function(){
+                var that = $(this);
+                localStorage.setItem("wzid",that.data('wzid'));
+                localStorage.setItem("evastatus",that.data('evastatus'));
+                localStorage.setItem("docid",that.data('docid'));
+                location.href='inquery_detail.html';
+                return false;
+             });
+             //去评价
+             $('.evaluation').on('click','.gotoEva',function(){
+                var that = $(this);
+                var oUpenq = that.parent('.evaluation').prev();
+                localStorage.setItem("wzid",oUpenq.data('wzid'));
+                localStorage.setItem("evastatus",oUpenq.data('evastatus'));
+                localStorage.setItem("docid",oUpenq.data('docid'));
+                location.href= 'evaluation_page.html';
+                return false;
+             });
+             //点击已评价
+             $('.evaluation').on('click','.alEval',function(){
+                var that = $(this);
+                var oUpenq = that.parent('.evaluation').prev();
+                localStorage.setItem("wzid",oUpenq.data('wzid'));
+                localStorage.setItem("evastatus",oUpenq.data('evastatus'));
+                localStorage.setItem("docid",oUpenq.data('docid'));
+                location.href= 'evaluation_page.html';
+                return false;
+             });
+           }
+        });
+    }
+    function diagnoseListUrl(page,size,sort){
+         return  window.YLZ.base+'pat/asking/recordlists?token='+userToken+'&sort=&docId=&page='+page+'&size='+size;
+    }
+    $('.remainInfo').on('click','#loadMore',function(){
+        loadPage(pageNum,pageSize);
+    });
+});
+</script>
+</body>
+</html>

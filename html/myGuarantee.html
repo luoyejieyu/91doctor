@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>我的保障</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>我的保险</span>
+</div>
+    <div class="container2 marTop5">
+        <div class="myG" id="myInsurance">
+            <!--<dl>-->
+                <!--<dt>保障中</dt>-->
+                <!--<dd>杏林医院问诊险</dd>-->
+                <!--<dd>保障期限 <span>2016-4&nbsp;—&nbsp;20.6-10</span></dd>-->
+            <!--</dl>-->
+            <!--<dl>-->
+                <!--<dt>保障过期</dt>-->
+                <!--<dd>杏林医院问诊险</dd>-->
+                <!--<dd>保障期限 <span>2016-4&nbsp;—&nbsp;20.6-10</span></dd>-->
+            <!--</dl>-->
+    </div>
+    <section>
+        <div class="footer">
+            <!-- <p>没有更多了</p>
+            <a href="select_insure.html">查看更多保险</a> -->
+        </div>
+        <input id="pageHid" class="pageHid" type="hidden" value="1">
+        <input id="sizeHid" class="sizeHid" type="hidden" value="3">
+        <p class="logo_bottom">
+            <em id="logo"></em><br>
+            值得信赖的互联网医院
+        </p>
+    </section>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+
+<script id="insurances_item" type="text/html">
+  <%for(var i=0;i<insurances.length;i++){%>
+    <dl data-bxId="<%=insurances[i].id%>">
+    <%if(insurances[i].status==0){%>
+        <dt>保障中</dt>
+    <%}else if(insurances[i].status==1){%>
+        <dt>保障过期</dt>
+    <%}%>
+        <dd><%=insurances[i].name%></dd>
+        <dd>保障期限 <span><%=insurances[i].startdate%>&nbsp;—&nbsp;<%=insurances[i].enddate%></span></dd>
+    </dl>
+  <%}%>
+</script>
+<script type="text/javascript">
+$(function(){
+    //测试图片点击放大
+
+    var $myInsurance = $('#myInsurance');
+    var bt = baidu.template;
+    var pageNum=$('#pageHid').val();
+    var pageSize=$('#sizeHid').val();
+    var insuranceListUrl;
+    // debugger;
+    loadPage(pageNum,pageSize);
+    //查询保单列表
+    function loadPage(page,size){
+            $.ajax({
+             type:'get',
+             url: insuranceListUrl(page,size),
+             data:{
+              
+             },
+             success:function(data){
+               var html1 = bt('insurances_item',data);
+               $('#myInsurance').append(html1);
+               if(data.insurances.length<size){
+                  $('.footer').html('<p>没有更多了</p>');
+               }else{
+                 $('.footer').html('<a id="loadMore">查看更多保险</a>'); 
+                 pageNum++;
+               }
+              //点击事件
+               $('#myInsurance').on('click','dl',function(){
+                  var that = $(this);
+                  localStorage.setItem("bxid",that.data('bxid'));
+                  location.href='insure_detail.html';
+               });
+             }
+          });
+    }
+
+    function insuranceListUrl(page,size,sort){
+        return  window.YLZ.base+'pat/insurancelists?token='+localStorage.getItem("userToken1")+'&sort=&page='+page+'&size='+size;
+    }
+    $('.footer').on('click','#loadMore',function(){
+        loadPage(pageNum,pageSize);
+    });
+
+});
+</script>
+</body>
+</html>

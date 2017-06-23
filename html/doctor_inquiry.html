@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>医生问诊</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+    <style>
+        .box1{width: 54px; height: 54px; position: absolute; left: 42%; top: 66px; /* background: #333; */}
+        .box1 div:nth-child(1){
+            width: 50px; height: 50px;
+            border:2px solid #56D1A8;
+            border-radius: 50%;
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            -webkit-animation:rotate 1s ease-out infinite;
+        }
+        .box1 div:nth-child(2){
+            width: 20px; height: 20px;
+            border:2px solid #56D1A8;
+            border-radius: 50%;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            position: absolute; left: 15px; top: 15px;
+            -webkit-animation:rotate 0.5s ease-out infinite reverse;
+        }
+        @-webkit-keyframes rotate{
+            0%{-webkit-transform: rotate(0deg) scale(1);}
+            50%{-webkit-transform: rotate(180deg) scale(0.7);}
+            100%{-webkit-transform: rotate(360deg) scale(1);}
+        }
+        #enquiry_bottom{margin: 9rem 6rem}
+    </style>
+</head>
+<body>
+<header>
+    <div class="my_doc">
+        <span class="my_doctor">问诊</span>
+        <span >我的医生</span>
+    </div>
+</header>
+<section>
+    <div class="doctor_content">
+        <div id="enquiry">
+            <ul class="myContent" id="myEnquiry">
+                <li id="box">
+                    <div class="box1">
+                        <div></div>
+                        <div></div>
+                    </div>
+                </li>
+            </ul>
+            <p class="logo_bottom" id="enquiry_bottom">
+                <em id="logo"></em><br>
+                值得信赖的互联网医院
+            </p>
+        </div>
+    </div>
+</section>
+<nav class="nav">
+    <dl>
+        <dt><a href="home_page.html"><img src="../statics/img/home_b.png" alt=""></a></dt>
+        <dd><a href="home_page.html">首页</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="my_doctor.html"><img src="../statics/img/doc_g.png" alt=""></a></dt>
+        <dd ><a href="my_doctor.html" class="colo">医生</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="infor.html"><img src="../statics/img/infa_b.png" alt=""></a></dt>
+        <dd><a href="infor.html">消息</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="my_Introduce.html"><img src="../statics/img/me_b.png" alt=""></a></dt>
+        <dd><a href="my_Introduce.html">我的</a></dd>
+    </dl>
+</nav>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="http://cdn.ronghub.com/RongIMLib-2.2.4.min.js"></script>
+<script src="http://cdn.ronghub.com/RongIMLib-2.2.4.min.js"></script>
+<script type="text/javascript" src="../statics/js/common/RongEmoji-2.2.4.min.js"></script>
+<script>
+    (function(window,undefined){
+        RongIMLib.RongIMClient.init("pvxdm17jxm1mr");
+        RongIMLib.RongIMEmoji.init();
+        //测试使用的
+//        var doctorId='dbe0e8b89658428e9368fdd3dfa5077a';
+//        var patientId='00000000f9fdf1ef225f445d8cd00654732ece44';
+//        var patientToken='fedb64d84036426b874af4053da02e3c2200000000c3e38142c4d4d269e7bed90941fd6ef';
+        //正式使用的
+        var patientToken=localStorage.getItem('userToken');
+        var patientId=localStorage.getItem('userId');
+        var j=-1;
+
+        $('.nav dl').eq(0).on('tap',function(){
+            location.href='home_page.html';
+        });
+        var $span=$('.my_doc span');
+        $span.eq(1).on('click',function(){
+            location.href='my_doctor.html'
+        });
+        //清除未读消息
+        function clear_info(target){
+            var conversationType = RongIMLib.ConversationType.PRIVATE;
+            var targetId = target;
+            RongIMClient.getInstance().clearUnreadCount(conversationType,targetId,{
+                onSuccess:function(){
+                    console.log('清除未读消息数成功')
+                },
+                onError:function(error){
+                    // error => 清除未读消息数错误码。
+                    console.log(error)
+                }
+            });
+        }
+//跳转到聊天界面
+        $('.doctor_content').on('click','li',function(){
+            clear_info($(this).attr('data-id'))
+            localStorage.setItem('drop','get');
+            if($(this).attr('data-id').substr(0,1)==0){
+                localStorage.setItem('doctorId',$(this).attr('data-id'));
+                if($(this).attr('staus')=='fal'){
+                    localStorage.setItem('end_enquiry','true')
+                }else{
+                    localStorage.setItem('end_enquiry','false');
+                }
+                location.href='fxychat.html';
+            }else{
+                localStorage.setItem('team_name',$(this).find('.enquiry_department').html());
+                localStorage.setItem('doctorTeamId',$(this).attr('data-id'));
+                if($(this).attr('staus')=='fal'){
+                    location.href='flock_chat_end.html'
+                }else{
+                    location.href='flock_chat.html'
+                }
+            }
+        });
+
+        //获取会话列表
+        var token='';
+        var content_reg=/^(data:image)/g;
+        var chatTokenUrl = window.YLZ.base+'com/token/rongcloud?token='+patientToken;
+        var listLength=[];
+       $.ajax({
+         type:"get",
+         url:chatTokenUrl,
+         data:{
+
+         },
+         success:function(data){
+           token = data.token;
+//            console.log(token)
+             //设置消息监听器
+             RongIMClient.setConnectionStatusListener({
+                 onChanged: function (status) {
+                     switch (status) {
+                         case RongIMLib.ConnectionStatus.CONNECTED:
+                             console.log('链接成功');
+                             break;
+                         case RongIMLib.ConnectionStatus.CONNECTING:
+                             console.log('正在链接');
+                             break;
+                         case RongIMLib.ConnectionStatus.DISCONNECTED:
+                             console.log('断开连接');
+                             break;
+                         case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
+                             console.log('其他设备登录');
+                             break;
+                         case RongIMLib.ConnectionStatus.DOMAIN_INCORRECT:
+                             console.log('域名不正确');
+                             break;
+                         case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+                             console.log('网络不可用');
+                             break;
+                     }
+                 }});
+             // 消息监听器
+             RongIMClient.setOnReceiveMessageListener({
+                 // 接收到的消息
+                 onReceived: function (message) {
+                     // 判断消息类型
+                     switch(message.messageType){
+                         case RongIMClient.MessageType.TextMessage:
+                             // message.content.content => 消息内容
+                             break;
+                         case RongIMClient.MessageType.VoiceMessage:
+                             // 对声音进行预加载
+                             // message.content.content 格式为 AMR 格式的 base64 码
+                             break;
+                         case RongIMClient.MessageType.ImageMessage:
+                             // message.content.content => 图片缩略图 base64。
+                             // message.content.imageUri => 原图 URL。
+                             break;
+                         case RongIMClient.MessageType.DiscussionNotificationMessage:
+                             // message.content.extension => 讨论组中的人员。
+                             break;
+                         case RongIMClient.MessageType.LocationMessage:
+                             // message.content.latiude => 纬度。
+                             // message.content.longitude => 经度。
+                             // message.content.content => 位置图片 base64。
+                             break;
+                         case RongIMClient.MessageType.RichContentMessage:
+                             // message.content.content => 文本消息内容。
+                             // message.content.imageUri => 图片 base64。
+                             // message.content.url => 原图 URL。
+                             break;
+                         case RongIMClient.MessageType.InformationNotificationMessage:
+                             // do something...
+                             break;
+                         case RongIMClient.MessageType.ContactNotificationMessage:
+                             // do something...
+                             break;
+                         case RongIMClient.MessageType.ProfileNotificationMessage:
+                             // do something...
+                             break;
+                         case RongIMClient.MessageType.CommandNotificationMessage:
+                             // do something...
+                             break;
+                         case RongIMClient.MessageType.CommandMessage:
+                             // do something...
+                             break;
+                         case RongIMClient.MessageType.UnknownMessage:
+                             // do something...
+                             break;
+                         default:
+                         // do something...
+                     }
+                 }
+             });
+             //链接融云服务器
+             RongIMClient.connect(token, {
+                 onSuccess: function(userId) {
+                     console.log("Login successfully." + userId);
+                     //获取会话列表
+                     RongIMClient.getInstance().getConversationList({
+                         onSuccess: function(list) {
+                             // list => 会话列表集合。获取的数组中最近一个是第一个数据
+                             //消息内容渲染
+                             if(list.length==0){
+                                 $('#box').css('display','none');
+                                 $('#myEnquiry').append("<h3 style='text-align: center;width: 60%;margin-left: 20%;font-size: 1.3rem;margin-top: 2rem'>没有会话列表</h3>")
+                             }else{
+                                 $('#myEnquiry h3').remove();
+                                 $('#box').css('display','block');
+                                 var doctorUrl=window.YLZ.base+'pat/messages/list?docIds=';
+                                 for(var i=0;i<list.length;i++){
+                                     var info_count=0;
+                                     var html='';
+                                     //获取请求路径的url
+                                     if(list[i].targetId.substr(0,1)==0||list[i].targetId.substr(0,1)==6||list[i].targetId.substr(0,1)==1){
+                                         if(i==list.length-1){
+                                             doctorUrl+=list[i].targetId+'&token='+patientToken;
+                                         }else{
+                                             doctorUrl+=list[i].targetId+','
+                                         }
+                                     }else{
+                                         continue;
+                                     }
+                                     if(list[i].objectName=="91:ask"){
+                                         if (list[i].latestMessage.content.message.content.message == '结束问诊') {
+                                             html += '<li class="mc enquiry_doctor" data-id="" staus="fal">';
+                                         } else {
+                                             html += '<li class="mc enquiry_doctor" data-id="" staus="tru">';
+                                         }
+                                     }else{
+                                         html+='<li class="mc enquiry_doctor" data-id="" staus="tru">';
+                                     }
+                                     var time=new Date(list[i].sentTime);
+//获取指定的未
+                                     var h= time.getHours();
+                                     var m=time.getMinutes();
+                                     //获取指定的未读消息数
+
+                                     if(list[i].conversationType==1){
+                                         var conversationType = RongIMLib.ConversationType.PRIVATE;
+                                         var targetId =list[i].targetId;
+                                         RongIMLib.RongIMClient.getInstance().getUnreadCount(conversationType,targetId,{
+                                             onSuccess:function(count){
+                                                 // count => 指定会话的总未读数。
+//                                             info_count=count;
+                                                 listLength.push(count)
+                                             },
+                                             onError:function(){
+                                                 // error => 获取指定会话未读数错误码。
+                                             }
+                                         });
+
+                                     }else if(list[i].conversationType==3){
+                                         var conversationTypeteam= RongIMLib.ConversationType.GROUP;
+                                         var targetIdTeam =list[i].targetIdTeam;
+                                         RongIMLib.RongIMClient.getInstance().getUnreadCount(conversationTypeteam,targetIdTeam,{
+                                             onSuccess:function(count){
+                                                 // count => 指定会话的总未读数。
+//                                             info_count=count;
+                                                 listLength.push(count)
+                                             },
+                                             onError:function(){
+                                                 // error => 获取指定会话未读数错误码。
+                                             }
+                                         });
+                                     }else{
+                                         continue;
+                                     }
+
+                                     html+='<div class="info_num"></div>';
+                                     html+='<span><img src="../statics/img/1.jpg" alt="" class="enquiry_img"></span>';
+                                     html+=' <div class="content">';
+                                     html+='<h4><span class="enquiry_department"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="enquiry_name"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="enquiry_title"></span></h4>';
+                                     html+=' <p class="address c-txt enquiry_hospital"></p>';
+                                     if(list[i].latestMessage.objectName=='RC:TxtMsg'){
+                                         html+='<p>'+list[i].latestMessage.content.content+'</p>';
+                                     }else if(list[i].latestMessage.objectName=='RC:ImgMsg'){
+                                         html+='<p>[图片]</p>';
+                                     }else if(list[i].latestMessage.objectName=="91:ask"){
+                                         html+='<p>'+list[i].latestMessage.content.message.content.message+'</p>';
+                                     }else{
+                                         html+='<p></p>';
+                                     }
+                                     html+='<span class="data"><em>'+h+':</em>';
+                                     if(m<10){
+                                         html+='<em>0'+m+'</em></span>';
+                                     }else{
+                                         html+='<em>'+m+'</em></span>';
+                                     }
+                                     html+='</div>';
+                                     html+='</li>';
+                                     $('#box').remove();
+                                     $('#myEnquiry').append(html);
+                                 }
+                                 $.ajax({
+                                     type:'get',
+                                     url:doctorUrl,
+                                     success:function(data){
+                                         var doctor=data.messageList;
+                                         console.log(listLength);
+                                         for(var j=0;j<doctor.length;j++){
+                                             if(listLength[j]!=0){
+                                                 $('#myEnquiry .info_num').eq(j).addClass('info');
+                                                 $('#myEnquiry .info_num').eq(j).html(listLength[j]);
+                                             }
+                                             if(doctor[j].image!=''&&doctor[j].image!=null){
+                                                 $('#myEnquiry .enquiry_img').eq(j).attr('src',doctor[j].image);
+                                             }else{
+                                                 $('#myEnquiry .enquiry_img').eq(j).attr('src','../statics/img/default_head.jpg');
+                                             };
+                                             $('#myEnquiry .enquiry_doctor').eq(j).attr('data-id',doctor[j].docId);
+                                             $('#myEnquiry .enquiry_department').eq(j).html(doctor[j].name);
+                                             if(doctor[j].department!=null&&doctor[j].department!=''){
+                                                 $('#myEnquiry .enquiry_name').eq(j).html(doctor[j].department);
+                                             };
+                                             if(doctor[j].title!=null&&doctor[0].title!=''){
+                                                 $('#myEnquiry .enquiry_title').eq(j).html(doctor[j].title);
+                                             };
+                                             if(doctor[j].hospital!=null&&doctor[j].hospital!=''){
+                                                 $('#myEnquiry .enquiry_hospital').eq(j).html(doctor[j].hospital);
+                                             };
+                                         }
+                                         $('#myEnquiry').append('<h5 class="marTop">没有更多了</h5>');
+                                     }
+                                 });
+                             }
+                         },
+                         onError: function(error) {
+                             // do something...
+                         }
+                     },null);
+                 },
+                 onTokenIncorrect: function() {
+
+                 },
+                 onError:function(errorCode){
+                     var info = '';
+                     switch (errorCode) {
+                         case RongIMLib.ErrorCode.TIMEOUT:
+                             info = '超时';
+                             break;
+                         case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+                             info = '未知错误';
+                             break;
+                         case RongIMLib.ErrorCode.UNACCEPTABLE_PaROTOCOL_VERSION:
+                             info = '不可接受的协议版本';
+                             break;
+                         case RongIMLib.ErrorCode.IDENTIFIER_REJECTED:
+                             info = 'appkey不正确';
+                             break;
+                         case RongIMLib.ErrorCode.SERVER_UNAVAILABLE:
+                             info = '服务器不可用';
+                             break;
+                     }
+                 }
+             });
+         }
+       });
+
+    })(window)
+
+</script>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>团队页面</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body class="container3">
+<div class="top" id="team_name">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span></span>
+</div>
+<div class="tP marTop5">
+    <div class="team_member">
+
+    </div>
+    <div class="team_int">
+    </div>
+</div>
+<input type="button" value="我要问诊" class="btn" id="toEnquiry" data-id="">
+<div class="logo_bottom">
+    <em id="logo"></em>
+      <p>值得信赖的互联网医院</p>
+</div>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script>
+    (function(window,undefined){
+        var userToken=localStorage.getItem('userToken');
+        var expertTeamid=localStorage.getItem('teamId');
+        var userId=localStorage.getItem('userId');
+        //跳转到医生主页
+        $('.team_member').on('tap','dl',function(){
+            localStorage.setItem('doctorId',$(this).attr('data-id'));
+            location.href='doctorPage.html';
+        });
+//        查询专家团队成员信息并渲染
+        function teamMember(data){
+            for(var i=0;i<data.length;i++){
+                var html='';
+                html+=' <dl data-id="'+data[i].docId+'">';
+                html+=' <dt><img src="'+data[i].image+'" alt=""></dt>';
+                html+='<dd>'+data[i].name+'</dd>';
+                html+='<dd>'+data[i].role+'</dd>';
+                if(data[i].title!=''&&data[i].title!=null){
+                    html+='<dd>'+data[i].title+'</dd>';
+                }
+                html+=' </dl>';
+                $('.team_member').append(html)
+            }
+        }
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'com/groups/'+expertTeamid+'/members?token='+userToken,
+            data:'',
+            success:function(data){
+                console.log(data)
+                if(data.result.code==0){
+                    teamMember(data.members);
+                }else{
+                    alert('数据加载异常')
+                }
+            }
+        });
+
+        function addteamInfo(data){
+            var html='';
+            html+='<div>';
+            html+='<h1 class="tc">团队简介</h1>';
+            html+=' <h3>团队名称：<span>'+data.name+'</span></h3>';
+            html+=' <h3>创建者名称：<span>'+data.createrName+'</span></h3>';
+            html+=' <h3>团队描述：</h3>';
+            html+='<p id="team_information">'+data.desc+'</p>';
+            html+='</div>';
+            $('.team_int').append(html);
+            $('#team_name span').html(data.name)
+        }
+//        查询专家团队信息
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'com/groups/'+expertTeamid+'/info?token='+localStorage.getItem('userToken'),
+            data:'',
+            success:function(data){
+                if(data.result.code==0){
+                    localStorage.setItem('team_name',data.info.name);
+                    $('#team_name span').html(data.info.name);
+                    $('title').html(data.info.name);
+                    addteamInfo(data.info);
+                }else{
+                    alert('数据加载异常')
+                }
+            }
+        });
+
+        //点击我要会诊跳转聊天界面
+        $('#toEnquiry').on('tap',function(){
+            $.ajax({
+                type:'post',
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                data:JSON.stringify({
+                    'patId':userId,
+                    'groupId':expertTeamid
+                }),
+                url:window.YLZ.base+'com/tempgroups?token='+userToken,
+                success:function(data){
+                    localStorage.setItem('drop','get');
+                    localStorage.setItem('doctorTeamId',data.groupId);
+                    location.href='flock_chat.html'
+                }
+            })
+        })
+    })(window)
+</script>
+</html>

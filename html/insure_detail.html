@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>保险详情</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>保单详情</span>
+</div>
+    <div class="container marTop5">
+        <section id="insDetail">
+           <!-- <dl class="iD">
+                <dt>保障中</dt>
+                <dd class="sure">
+                    <span>杏林医院问诊险</span>
+                    <p>NO.135525556625471952</p>
+                    <p>由太平洋保险承担</p>
+                </dd>
+            </dl>
+             <ul class="iD_info">
+                <li><span>被保险人</span><em>徐毅飞</em></li>
+                <li><span>保障额度</span><em>100000元</em></li>
+                <li><span>可赔次数</span><em>不限制</em></li>
+                <li><span>保险费用</span><em>免费</em></li>
+                <li><span>保险期限</span><em>2014-04-07至2017-4-3</em></li>
+                <li><span>点击查看</span><a href="service_agg.html" class="sure"> 《保险条款》 </a></li>
+            </ul> -->
+        </section>
+        <div class="share">
+            <dl>
+                <dt><img src="../statics/img/apply_compensate.png" alt=""></dt>
+                <a href="#">申请理赔</a>
+            </dl>
+            <dl class="shareS">
+                <dt><img src="../statics/img/share.png" alt=""></dt>
+                <dd >分享</dd>
+            </dl>
+        </div>
+    </div>
+    <p class="logo_bottom">
+        <em id="logo"></em><br>
+        值得信赖的互联网医院
+    </p>
+    <script src="../statics/js/common/zepto.min.js"></script>
+    <script src="../statics/js/common/baidu_template.js"></script>
+    <script src="../statics/js/common/basic.js"></script>
+
+<script>
+    $('.share dl').eq(0).on('click',function(){
+        window.location.href='apply_compensate.html';
+    })
+</script>
+<script id="insDetailTpl" type="text/html">
+<dl class="iD" data-lpid="<%=insurance.id%>">
+    <dt>
+    <%if(insurance.status==0){%>
+       保障中
+    <%}else if(insurance.status==1){%>
+       保障过期
+    <%}%>
+    </dt>
+    <dd class="sure">
+        <span><%=insurance.insuranceName%></span>
+        <p><%=insurance.insuranceNo%></p>
+        <p>由<%=insurance.company%>承担</p>
+    </dd>
+</dl>
+ <ul class="iD_info">
+    <li><span>被保险人</span><em><%=insurance.patName%></em></li>
+    <li><span>保障额度</span><em><%=insurance.limit%>元</em></li>
+    <li><span>可赔次数</span><em><%=insurance.paycount%></em></li>
+    <li><span>保险费用</span><em><%=insurance.fee%></em></li>
+    <li><span>保险期限</span><em><%=insurance.startdate%>至<%=insurance.enddate%></em></li>
+    <li><span>点击查看</span><a href="service_agg.html" class="sure"> 《保险条款》 </a></li>
+</ul>
+</script>
+<script type="text/javascript">
+$(function(){
+    var $insDetail = $('#insDetail');
+    var bt = baidu.template;
+    var bxNum =  localStorage.getItem("bxid");
+    var insDeUrl = window.YLZ.base+'pat/insurances/'+bxNum+'?token='+localStorage.getItem("userToken1");
+
+    //保单详情
+    $.ajax({
+       type:'get',
+       url: insDeUrl,
+       data:{
+
+       },
+       success:function(data){
+         var html1 = bt('insDetailTpl',data)
+         $insDetail.append(html1);
+         localStorage.setItem('lpid',$('#insDetail').find('.iD').data('lpid'));
+       }
+    });
+    //分享
+    $('.shareS').on('click',function(){
+        alert('请点击右上角的微信分享')
+    })
+});
+</script>
+</body>
+</html>

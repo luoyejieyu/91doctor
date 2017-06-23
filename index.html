@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>91好医生</title>
+    <link rel="stylesheet" href="statics/css/allWap.css">
+</head>
+<body>
+<div class="container1">
+    <div class="search" id="home_search">
+        <input type="text" placeholder="搜索医院、医生">
+        <span><img src="statics/img/searchLogo.png" alt=""></span>
+    </div>
+        <!--轮播图的样式-->
+    <div id="leftTabBox2" class="tabBox leftTabBox">
+        <div class="hd">
+            <ul>
+                <li></li><li></li><li></li>
+            </ul>
+        </div>
+        <div class="bd">
+            <ul>
+                <li><img src="statics/img/3.jpg" data-id="" class="banner1"></li>
+            </ul>
+            <ul>
+                <li><img src="statics/img/1.jpg" data-id="" class="banner2"></li>
+            </ul>
+            <ul>
+                <li><img src="statics/img/1.jpg" data-id="" class="banner3"></li>
+            </ul>
+        </div>
+    </div>
+    <section>
+        <div class="question">
+            <div class="page_lo">
+                <img src="statics/img/map.png" alt="" class="logo">
+                <a href="html/patientagreement.html" class="fon14" onfocus="this.blur()" style="border: none;outline: none;text-decoration: none;">91好医生为您提供全程保障，点击查看</a>
+            </div>
+            <dl>
+                <dt><img src="statics/img/3.jpg" alt=""></dt>
+                <dd>
+                    <p >全国名医在线解答<br>提问就送网络问诊险</p>
+                    <p class="free"><a href="html/online_solve.html">推广期免费问诊咨询</a></p>
+                </dd>
+            </dl>
+        </div>
+        <div class="hospital">
+            <h3>91好医生推荐医院 </h3>
+            <ul id="addHospital">
+            </ul>
+        </div>
+    </section>
+    <footer>
+        <div class="old_expert" id="old_exp">
+            <h3>91好医生推荐医生</h3>
+        </div>
+    </footer>
+</div>
+<nav class="nav">
+    <dl>
+        <dt><img src="statics/img/home_g.png" alt=""></dt>
+        <dd >首页</dd>
+    </dl>
+    <dl>
+        <dt><a href="html/my_doctor.html"><img src="statics/img/doc_b.png" alt=""></a></dt>
+        <dd ><a href="html/my_doctor.html">医生</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="html/infor.html"><img src="statics/img/infa_b.png" alt=""></a></dt>
+        <dd><a href="html/infor.html">消息</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="html/my_Introduce.html"><img src="statics/img/me_b.png" alt=""></a></dt>
+        <dd><a href="html/my_Introduce.html">我的</a></dd>
+    </dl>
+</nav>
+<script src="statics/js/common/zepto.min.js"></script>
+<script src="statics/js/common/basic.js"></script>
+<script src="statics/js/common/touchSlide.1.1.js"></script>
+<script src="statics/js/xyfpublic/xyfpublic.js"></script>
+</body>
+<script>
+    (function(window,undefined){
+//        var userToken='b154627c8fee4614aae4989795cfb1b0220000000b154627c8fee4614aae4989795cfb1b0';
+        //正式版使用
+        var userToken=localStorage.getItem('userToken');
+        //跳转到搜索页面
+        $('.search').on('click',function(){
+            location.href='html/search_page.html'
+        });
+        /*轮播图效果*/
+        TouchSlide({
+            slideCell:"#leftTabBox2",
+            autoPlay:'true',
+            effect:'leftLoop'
+        });
+        //为首页的banner图添加点击事件，跳转到活动详情页
+        $('.bd').on('click','img',function(){
+            localStorage.setItem('bannerId',$(this).attr('data-id'));
+            location.href='html/activity.html';
+        });
+        //处理初始化页面时加载到banner数据；
+        function bannerLists(data) {
+            for (var i=0;i<3;i++) {
+                var banner='.banner'+(i+1);
+                $(banner).attr({'data-id': data[i].id,'src':data[i].url});  //获取图片的id属性
+            }
+        }
+        //ajax请求渲染banner页面
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'pat/bannerlists?token='+userToken,
+            data:'',
+            success:function(data){
+                if(data.result.code==0){
+                    bannerLists(data.images);
+                }else{
+                    alert('数据加载异常')
+                }
+            }
+        });
+
+        //首页推荐的医院
+        function addHospital(data){
+            var html='';
+            for (var i=0;i<data.length;i++) {
+                html+='<li data-id="'+data[i].id+'"><a href="html/recommend_hospital.html" class="c-txt">'+data[i].name+'</a></li>';
+            }
+            $('#addHospital').append(html)
+        }
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'pat/ads/hospitals?token='+userToken+'&page=1&size=6',
+
+            data:'',
+            success:function(data){
+                if(data.result.code==0){
+                    addHospital(data.hospitals);
+                }else{
+                    alert('数据加载异常')
+                }
+            }
+        });
+        //首页推荐的专家以及渲染
+        function addDocs(data){
+            for (var i=0;i<data.length;i++) {
+                var html='';
+                html+='<dl class="clearfix" data-id="'+data[i].docId+'">';
+                if(data[i].image==''||data[i].image==null){
+                    html+='<dt ><img src="statics/img/logo.png" alt=""></dt>';
+                }else{
+                    html+='<dt ><img src="'+data[i].image+'" alt=""></dt>';
+                }
+                html+='<dd class="dd1">';
+                html+=' <span>'+data[i].name+'</span>';
+                html+='<span class="free_enquiry border" data-id="'+data[i].docId+'">免费问诊</span>';
+                html+=' <dd>'+data[i].hospital+'</dd>';
+                html+='</dd>';
+                html+=' <dd>';
+                html+='<span>'+data[i].title+'</span>';
+                if(data[i].educationTitle!=''&&data[i].educationTitle!=null){
+                    html+=' <span>&nbsp;&nbsp;'+data[i].educationTitle+'</span>';
+                }
+                html+=' &nbsp;&nbsp;<span>'+data[i].department+'</span>';
+                html+='</dd>';
+                html+=' </dl>';
+                $('.old_expert').append(html)
+            }
+        }
+        $.ajax({
+            method:'get',
+            url:window.YLZ.base+'pat/ads/docs?token='+userToken+'&page=1&size=5',
+            data:'',
+            success:function(data){
+                //console.log(data)
+                addDocs(data.docs);
+            }
+        });
+    })(window);
+</script>
+</html>

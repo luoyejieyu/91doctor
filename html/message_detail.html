@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>消息详情</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+      <em>
+          <img src="../statics/img/enter.png" alt="">
+      </em>
+    <span>消息详情</span>
+</div>
+<div class="msgcArea">
+   <article id="msgDetailCon" class="msglBg">
+      <!--  <div class="mD">
+            <h3>2016-2-20</h3>
+            <div class="m_content">
+                <h2>成为一亿糖人中的一个是一种怎样的体验</h2>
+                <img src="../statics/img/3.jpg" alt="">
+                <p>不如让我在无知的状态下离开这个世上，年轻的晶晶在得知自己患糖尿病后曾这样想过</p>
+                <a href="#">查看详情 <span><img src="../statics/img/enter.png" alt=""></span></a>
+            </div>
+        </div> -->
+    </article>
+    <div class="resultTip"></div>
+</div>
+<input id="pageHid" class="pageHid" type="hidden" value="1">
+<input id="sizeHid" class="sizeHid" type="hidden" value="3">
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/jquery-1.7.2.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+
+<script>
+$('.mD').on('click',function(){
+    window.location.href='activity.html'
+})
+</script>
+<script id="msgDetailTpl" type="text/html">
+<%for(var i=0;i<msgs.length;i++){%>
+    <div class="mD" data-mdid="<%=msgs[i].id%>">
+      <h3><%=msgs[i].date%></h3>
+      <div class="m_content">
+          <h2><%=msgs[i].title%></h2>
+          <p><%=msgs[i].content%></p>
+      </div>
+  </div>
+<%}%>
+</script>
+<script type="text/javascript">
+$(function(){
+    var $msgDetailCon = $('#msgDetailCon');
+    var bt = baidu.template;
+    var msgPage = $('#pageHid').val();
+    var msgSize = $('#sizeHid').val();
+    var type = localStorage.getItem('infotype');
+    var msgDetailUrl;
+    if($msgDetailCon.children().length==0){
+      $('.resultTip').html('<p>您现在还没有消息</p>');
+    }
+    loadMsg(msgPage,msgSize,type);
+    //获取消息列表
+    function loadMsg(page,size,type){
+       $.ajax({
+           type:'get',
+           url: msgDetailUrl(page,size,type),
+           data:{
+
+           },
+           success:function(data){
+            //console.log(data)
+             var html1 = bt('msgDetailTpl',data);
+             $('#msgDetailCon').append(html1);
+             if(data.msgs.length<size){
+                $('.resultTip').html('<p>没有更多了</p>');
+             }else{
+                $('.resultTip').html('<a id="loadMore">查看更多</a>');
+                msgPage++;
+             }
+             //点击事件
+             // $('#msgDetailCon').on('click','.mD',function(){
+             //    var that = $(this);
+             //    localStorage.setItem("mdid",that.data('mdid'));
+             //    location.href='msgContent.html';
+             // });
+           }
+        });
+    }
+
+    function msgDetailUrl(page,size,type,sort){
+        return  window.YLZ.base+'com/msglists?size='+size+'&sort=&type='+type+'&token='+localStorage.getItem("userToken1")+'&page='+page;
+    }
+    $('.resultTip').on('click','#loadMore',function(){
+        loadMsg(msgPage,msgSize,type);
+    });
+});
+</script>
+</body>
+</html>

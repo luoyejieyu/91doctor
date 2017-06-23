@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>王明的评价</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<article>
+    <div class="top" id="doctor_evaluation">
+        <em>
+            <img src="../statics/img/enter.png" alt="">
+        </em>
+        <span>王明收到的评价</span>
+    </div>
+    <div class="doctor_evaluation marTop5">
+    </div>
+</article>
+<footer>
+    <div class="footer">
+        <p id="more_hosEva" class="no_more"></p>
+        <h3 class="no_more" id="no_hosEva"></h3>
+        <p>
+            <em id="logo"></em><br>
+            91医院<span><img src="../statics/img/map.png" alt=""></span>&nbsp;&nbsp;
+            值得信赖的互联网医院
+        </p>
+    </div>
+</footer>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/xyfpublic/xyfpublic.js"></script>
+<script>
+    (function(window,undefined){
+        //查询医生问诊评价
+        function doctor_evaluation(data){
+            for(var i=0;i<data.length;i++){
+                var html='';
+                var dataCircle=data[i];
+                html+='<dl>';
+                html+=' <dt><img src="'+data[i].image+'" alt=""></dt>';
+                html+=' <dd>'+data[i].name.substr(0,1)+'**<span class="eva_time">'+YLZ.getLocalTime(data[i].date)+'</span>';
+                html+='</dd>';
+                html+='<dd>';
+                html+='<span class="img">';
+                var html2=window.cloudFunction.addStar(dataCircle,html);
+                html2+='</span>';
+                html2+='</dd>';
+                html2+=' <p>'+data[i].content+'</p>';
+                html2+='</dl>';
+                $('.doctor_evaluation').append(html2);
+            }
+        }
+        var docevaId=localStorage.getItem('doctorId');
+        //所有医生评价列表。
+        var docevaNum=1;
+        var docevaSize=8;
+        loadEvaluation(docevaNum,docevaSize);
+        function loadEvaluation(page,size){
+            $.ajax({
+                type:'get',
+                url: docevaListUrl(page,size),
+                data:'',
+                success:function(data){
+                    $('#doctor_evaluation span').html(localStorage.getItem('doctorName')+'收到的评价');
+                    if(data.result.code==0){
+                        doctor_evaluation(data.scores);
+                        if(data.count<=page*size){
+                            $('#no_hosEva').html('没有更多了');
+                            $('#more_hosEva').html('');
+                        }else{
+                            $('#more_hosEva').html('查看更多医生评价');
+                            $('#no_hosEva').html('');
+                            docevaNum++;
+                        }
+                    }else{
+                        alert('数据加载异常')
+                    }
+                }
+            });
+        }
+        function docevaListUrl(page,size,sort){
+            return  window.YLZ.base+'com/docs/'+docevaId+'/scores?token='+localStorage.getItem('userToken')+'&page='+page+'&size='+size;
+        }
+        $('#more_hosEva').on('click',function(){
+            loadEvaluation(docevaNum,docevaSize);
+        });
+//        var str='我和封口机挂号费';
+//        alert(str.substr(0,1))
+    })(window)
+</script>
+</body>
+</html>

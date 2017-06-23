@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>医院专家</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body >
+<div class="top hospital_name" >
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span></span>
+</div>
+<div class="container3 marTop5" id="hospital_experts">
+
+</div>
+<footer>
+    <p id="more_hosexp" class="no_more"></p>
+    <h3 class="no_more" id="no_hosexp"></h3>
+    <div class="footer">
+        <p>
+            <em id="logo"></em><br>
+            值得信赖的互联网医院
+        </p>
+    </div>
+</footer>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/xyfpublic/xyfpublic.js"></script>
+<script type="text/javascript">
+    (function(window,undefined){
+        var hospital_name=localStorage.getItem('hospital_name');
+        var hosExpert=localStorage.getItem('xyfId');
+        $('.hospital_name span').html(hospital_name);
+        function doctorList(data){
+            for(var i=0;i<data.length;i++){
+                var html='';
+//                var dataCircle=data[i];
+                html+='<dl class="dL" data-id="'+data[i].docId+'">';
+                if(data[i].image==''||data[i].image=='null'){
+                    html+=' <dt><img src="../statics/img/1.jpg" alt=""></dt>';
+                }else{
+                    html+=' <dt><img src="'+data[i].image+'" alt=""></dt>';
+                }
+                html+='<dd><strong>'+data[i].name+'</strong>&nbsp;&nbsp;';
+                if(data[i].title!=null&&data[i].title!=null){
+                    html+='<span>'+data[i].title+'</span>&nbsp;&nbsp;';
+                }
+                html+='<span>'+data[i].department+'</span>&nbsp;&nbsp;';
+                if(data[i].educationtitle!=''&&data[i].educationtitle!=null){
+                    html+='<span>'+data[i].educationtitle+'</span>'
+                }
+                html+='<p class="hospitalName">'+data[i].hospital+'</p>';
+                html+=' </dd>';
+                html+=' <dd>';
+                if(Math.ceil(data[i].score)==1){
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                    return html;
+                }else if(Math.ceil(data[i].score)==2){
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                }else if(Math.ceil(data[i].score)==3){
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                }else if(Math.ceil(data[i].score)==4){
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/gray.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                }else if(Math.ceil(data[i].score)==5){
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">';
+                    html+='<img src="../statics/img/yellow.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                }
+                html+='<span>问诊量'+data[i].askCount+'</span>';
+                html+='</dd>';
+                html+='<dd>';
+                if(data[i].good!=''||data[i].good!=null){
+                    html+='<em class="marLR">擅长:</em>';
+                    html+='<span>'+data[i].good+'</span>&nbsp;&nbsp;';
+                }
+                html+='</dd>';
+                html+='</dl>';
+                $('#hospital_experts').append(html);
+            }
+        }
+        var hosexpNum=1;
+        var hosexpSize=8;
+        loadHosexp(hosexpNum,hosexpSize);
+        //所有医院医生的列表
+        function loadHosexp(page,size){
+            $.ajax({
+                type:'get',
+                url: expListUrl(page,size),
+                data:'',
+
+                success:function(data){
+//                    console.log(data)
+                    if(data.docs.length!=0){
+                        $('.hospital_name span').html(data.docs[0].hospital);
+                    }
+                    doctorList(data.docs);
+                    if(data.docs.length<8){
+                        $('#no_hosexp').html('没有更多了');
+                        $('#more_hosexp').html('');
+                    }else{
+                        $('#more_hosexp').html('查看更多医生');
+                        $('#no_hosexp').html('');
+                        hosexpNum++;
+                    }
+                }
+            });
+        }
+        function expListUrl(page,size,sort){
+            return  window.YLZ.base+'pat/hospitals/'+hosExpert+'/docs?token='+localStorage.getItem('userToken')+'&page='+page+'&size='+size;
+        }
+        $('#more_hosexp').on('click',function(){
+            loadHosexp(hosexpNum,hosexpSize);
+        });
+
+    })(window);
+</script>
+</html>

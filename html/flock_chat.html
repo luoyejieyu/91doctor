@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0,user-scalable=no,portrait">
+    <title>聊天</title>
+    <link rel="stylesheet" href="css/chat.css">
+    <style>
+        #box{width: 54px;height: 60px;display: none}
+        .box1{width: 54px; height: 54px; position: absolute; left: 42%; top: 66px; /* background: #333; */}
+        .box1 div:nth-child(1){
+            width: 50px; height: 50px;
+            border:2px solid #56D1A8;
+            border-radius: 50%;
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            -webkit-animation:rotate 1s ease-out infinite;
+        }
+        .box1 div:nth-child(2){
+            width: 20px; height: 20px;
+            border:2px solid #56D1A8;
+            border-radius: 50%;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            position: absolute; left: 15px; top: 15px;
+            -webkit-animation:rotate 0.5s ease-out infinite reverse;
+        }
+        @-webkit-keyframes rotate{
+            0%{-webkit-transform: rotate(0deg) scale(1);}
+            50%{-webkit-transform: rotate(180deg) scale(0.7);}
+            100%{-webkit-transform: rotate(360deg) scale(1);}
+        }
+        #chat_name{line-height: 54px}
+        #big_img{background-color: black;width: 100%;position: absolute;height: 568px;top: 0;z-index: 9999;display: none}
+        #bigImg{
+            position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;
+            max-width: 100%;max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+<header class="geoPosition whiteBg">
+    <em  id="chat_back">
+        <a class="backBtn" href="javascript:void(0)"></a>
+    </em>
+    <h3 class="nameDoc"><span id="chat_name">高林的专家团队</span></h3>
+    <em class="perSign" id="perSign"></em>
+</header>
+<main>
+    <div id="chatCon" class="chatCon clearfix">
+        <div id="box">
+            <div class="box1">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <ul class="clearfix" style="overflow: hidden" id="chat_content">
+            <!--<li class="rt">-->
+            <!--<a href="#" class="facePic">-->
+            <!--<img src="http://placehold.it/40x40" alt="">-->
+            <!--</a>-->
+            <!--<div class="commt"><span>同居</span>-->
+            <!--<em class="sanjiao_right"></em>-->
+            <!--</div>-->
+            <!--</li>-->
+            <!--<li class="lt">-->
+            <!--<a href="#" class="facePic">-->
+            <!--<img src="http://placehold.it/40x40" alt="">-->
+            <!--</a>-->
+            <!--<div class="commt"><span>同居</span>-->
+            <!--<em class="sanjiao_left"></em>-->
+            <!--</div>-->
+            <!--</li>-->
+            <!--<li class="lt">-->
+            <!--<a href="#">-->
+            <!--<img src="http://placehold.it/50x50" alt="">-->
+            <!--</a>-->
+            <!--<div class="commt">-->
+            <!--你好，在吗？-->
+            <!--</div>-->
+            <!--</li>-->
+            <!--<li class="rt">-->
+            <!--<a href="#">-->
+            <!--<img src="http://placehold.it/50x50" alt="">-->
+            <!--</a>-->
+            <!--<div class="commt">-->
+            <!--在的呢~-->
+            <!--</div>-->
+            <!--</li> -->
+        </ul>
+    </div>
+</main>
+<footer>
+    <div id="btnBox" class="importArea">
+        <div class="chat_send">
+           <span class="uploadArea" id="send_photp">
+              <input type="file" id="portrait" class="upPic" capture="camera">
+              <img class="sendPhoto" src="../statics/img/sendPic.png">
+          </span>
+            <input type="text" id="msgIpt" class="inp">
+            <input type="button" value="发送" class="send">
+        </div>
+    </div>
+</footer>
+
+<div id="big_img">
+    <img src="" alt="" id="bigImg">
+</div>
+<script src="../statics/js/common/jquery-1.7.2.min.js"></script>
+<script src="http://cdn.ronghub.com/RongIMLib-2.2.4.min.js"></script>
+<script src="../statics/js/common/plupload.full.min.js"></script>
+<script src="../statics/js/common/qiniu.min.js"></script>
+<script type="text/javascript" src="../statics/js/common/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="../statics/js/common/RongEmoji-2.2.4.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#big_img').attr('height',$(window).height()+'px');
+        $('#big_img').attr('width',$(window).width()+'px');
+       var perSign=document.getElementById('perSign');
+        var hasMsginfo=true;
+        var load_info=true;
+        var first_info=true;
+        var drop=localStorage.getItem('drop');
+        $('#chat_name').html(localStorage.getItem('team_name'));
+        perSign.onclick=function(){
+            location.href='team_page.html'
+        };
+//          //正式的
+        var userToken=localStorage.getItem('userToken');
+        var userId=localStorage.getItem('userId');
+        //团队聊天的id
+        var doctorTeamId=localStorage.getItem('doctorTeamId');
+        //查询团队信息的接口
+//        var teamId=localStorage.getItem('teamId');
+        var targetId=localStorage.getItem('doctorTeamId');
+        var groupName;// 群名称 。
+        //初始化团队名称
+        groupName=localStorage.getItem('team_name');
+        $('#chat_name').html(groupName);
+//          //初始化融云SDK
+        RongIMLib.RongIMClient.init("pvxdm17jxm1mr");
+        console.log(targetId);
+        var chat_content=document.getElementById('chat_content');
+        function getScrollTop()
+        {
+            var scrollTop=0;
+            if(document.documentElement&&document.documentElement.scrollTop)
+            {
+                scrollTop=document.documentElement.scrollTop;
+            }
+            else if(document.body)
+            {
+                scrollTop=document.body.scrollTop;
+            }
+            return scrollTop;
+        }
+        var touchEvent={
+            //向下滑动事件
+            swipeDown:function(element,fn){
+                var isTouchMove, startTx, startTy;
+                element.addEventListener( 'touchstart', function( e ){
+                    var touches = e.touches[0];
+                    startTx = touches.clientX;
+                    startTy = touches.clientY;
+                    isTouchMove = false;
+                }, false );
+                element.addEventListener( 'touchmove', function( e ){
+                    isTouchMove = true;
+//                      e.preventDefault();
+                }, false );
+                element.addEventListener( 'touchend', function( e ){
+                    if( !isTouchMove ){
+                        return;
+                    }
+                    var touches = e.changedTouches[0],
+                            endTx = touches.clientX,
+                            endTy = touches.clientY,
+                            distanceX = startTx - endTx
+                    distanceY = startTy - endTy,
+                            isSwipe = false;
+                    if( Math.abs(distanceX) < Math.abs(distanceY) ){
+                        if( distanceY < -20 ){
+                            fn();
+                            isSwipe = true;
+                        }
+                    }
+                }, false );
+            }
+        };
+        //初始化个人基本信息
+        var my_url='';
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'com/pats/'+userId+'?token='+userToken,
+            data:'',
+            success:function(data){
+                my_url=data.info.image;
+            }
+        });
+
+        $('.backBtn').on('click',function(){
+            window.history.back(-1);
+        });
+        var flock_url='';
+        var $btnBox = $('#btnBox'),
+                $sendBtn = $btnBox.find('.send'),
+                $upPic = $btnBox.find('.upPic');
+
+        // //融云聊天token获取
+        var chatTokenUrl = window.YLZ.base+'com/token/rongcloud?token='+userToken;
+        var token='';
+        $.ajax({
+            type:"get",
+            url:chatTokenUrl,
+            data:{
+
+            },
+            success:function(data){
+                token = data.token;
+                //链接融云服务器
+                RongIMClient.connect(token,{
+                    onSuccess: function(userId) {
+
+//                  console.log("Login successfully." + userId);
+                        //创建群聊天
+//                      var groupId = doctorTeamId; // 群 Id 。
+//                      var groupName = "xxx";// 群名称 。
+
+                        if(drop=='get'){
+                            //获取历史消息
+                            getInfo();
+                            RongIMClient.getInstance().joinGroup(doctorTeamId, groupName, {
+                                onSuccess: function() {
+                                    // 加入群成功。
+                                    //文本
+                                    $sendBtn.on('click',function(){
+                                        var inp = $btnBox.find('.inp').val();
+                                        if(inp==''){
+                                            return;
+                                        }
+                                        var sendContent = inp.replace(/\[[\u4e00-\u9fa5]+\]/,function(emojiName){
+                                            return eArr[emojiName] ;
+                                        });
+                                        var tmpR='<li class="rt">'+
+                                                '<a href="#" class="facePic">'+
+                                                '<img src="'+my_url+'" alt="">'+
+                                                '</a>'+
+                                                '<div class="commt">'+sendContent+'</div>'+
+                                                '</li>';
+                                        $('#chatCon ul').append(tmpR);
+                                        $btnBox.find('.inp').val('');
+//                                    var targetId = groupId; // 目标 Id
+                                        var msg = new RongIMLib.TextMessage({'content':inp,'extra':'','user':targetId});
+                                        sendMsg(msg,targetId);
+                                    });
+                                    //上传token获取
+                                    var qnUpTokenUrl = window.YLZ.base + 'com/token/qiniu/uptoken?bucket=yyy-pat&token=' + userToken;
+                                    $.ajax({
+                                        type: 'get',
+                                        url: qnUpTokenUrl,
+                                        data: {},
+                                        success: function (data) {
+                                            var upPicToken = data.token;
+                                            var uploader = Qiniu.uploader({
+                                                runtimes: 'html5,flash,html4',
+                                                browse_button: 'portrait',
+                                                // uptoken : 'JGwgjvdzdhq-SMx-P6vjeoRx1c5HmVJiUv8Cn2G0:pGjRnSnr8K_nShbPzOvqfyN5tyo=:eyJzY29wZSI6InN0b3J0ZSIsImRlYWRsaW5lIjoxNDc4NDU0OTQxfQ==',
+                                                uptoken: upPicToken,
+                                                unique_names: true,
+                                                domain: 'yyy-pat',
+                                                get_new_uptoken: false,//设置上传文件的时候是否每次都重新获取新的uptoken
+                                                container: 'send_photp',
+                                                max_file_size: '100mb',
+                                                flash_swf_url: 'js/plupload/Moxie.swf',
+                                                max_retries: 3,
+                                                dragdrop: true,
+                                                drop_element: 'send_photp',
+                                                chunk_size: '0mb',
+                                                auto_start: true,
+                                                resize: {
+                                                    crop: true,
+                                                    quality: 60,
+                                                    preserve_headers: false
+                                                },
+                                                init: {
+                                                    'FilesAdded': function (up, files) {
+                                                        plupload.each(files, function (file) {
+                                                            // 文件添加进队列后，处理相关的事情
+
+                                                        });
+                                                    },
+                                                    'BeforeUpload': function (up, file) {
+                                                        // 每个文件上传前，处理相关的事情
+
+                                                    },
+                                                    'UploadProgress': function (up, file) {
+                                                        // 每个文件上传时，处理相关的事情
+
+                                                    },
+                                                    'FileUploaded': function (up, file, info) {
+                                                        // 每个文件上传成功后，处理相关的事情
+                                                        // 其中info是文件上传成功后，服务端返回的json，形式如：
+                                                        // {
+                                                        //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
+                                                        //    "key": "gogopher.jpg"
+                                                        //  }
+                                                        // 查看简单反馈
+                                                        var domain = 'http://ofp7knoi8.bkt.clouddn.com/';
+                                                        var res = JSON.parse(info);
+                                                        var imageUri = domain + res.key;
+                                                        var oFile = file.getNative();
+                                                        var oReader = new FileReader();
+                                                        oReader.onloadend = function (e) {
+                                                            var base64Str = e.target.result;
+                                                            var andbase = base64Str.split(',')[1];
+                                                            var msg = new RongIMLib.ImageMessage({content: andbase, imageUri: imageUri});
+                                                            var targetId = doctorTeamId; // 目标 Id
+                                                            var tmpR = '<li class="rt">' +
+                                                                    '<a href="#" class="facePic">' +
+                                                                    '<img src="' + my_url + '" alt="">' +
+                                                                    '</a>' +
+                                                                    '<div class="commt imgBg"><img class="imgSmall" src="' + base64Str + '" alt=""></div>' +
+                                                                    '</li>';
+                                                            $('#chatCon ul').append(tmpR);
+                                                            DrawImage();
+                                                            sendMsg(msg, targetId);
+                                                        };
+                                                        oReader.readAsDataURL(oFile);
+
+                                                    },
+                                                    'Error': function (up, err, errTip) {
+                                                        //上传出错时，处理相关的事情
+                                                    },
+                                                    'UploadComplete': function () {
+                                                        //队列文件处理完毕后，处理相关的事情
+                                                    },
+                                                    'Key': function (up, file) {
+                                                        // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+                                                        // 该配置必须要在unique_names: false，save_key: false时才生效
+
+                                                        var key = "";
+                                                        // do something with key here
+                                                        return key
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                },
+                                onError: function(error) {
+                                    // error => 加入群失败错误码。
+                                    //console.log(error)
+                                }
+                            });
+                        }
+                    },
+                    onTokenIncorrect: function() {
+//                  console.log('token无效');
+                    },
+                    onError:function(errorCode){
+                        var info = '';
+                        switch (errorCode) {
+                            case RongIMLib.ErrorCode.TIMEOUT:
+                                info = '超时';
+                                break;
+                            case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+                                info = '未知错误';
+                                break;
+                            case RongIMLib.ErrorCode.UNACCEPTABLE_PaROTOCOL_VERSION:
+                                info = '不可接受的协议版本';
+                                break;
+                            case RongIMLib.ErrorCode.IDENTIFIER_REJECTED:
+                                info = 'appkey不正确';
+                                break;
+                            case RongIMLib.ErrorCode.SERVER_UNAVAILABLE:
+                                info = '服务器不可用';
+                                break;
+                        }
+                        //(errorCode);
+                    }
+                });
+            }
+        });
+        //等加载到顶部的时候，要显示加载更多
+        function getInfo(){
+            var conversationType = RongIMLib.ConversationType.GROUP; //群聊,其他会话选择相应的消息类型即可。
+            var targetId = doctorTeamId; // 想获取自己和谁的历史消息，targetId 赋值为对方的 Id。
+            var timestrap =null; // 默认传 null，若从头开始获取历史消息，请赋值为 0 ,timestrap = 0;
+            var count = 20; // 每次获取的历史消息条数，范围 0-20 条，可以多次获取。
+            RongIMLib.RongIMClient.getInstance().getHistoryMessages(conversationType, targetId,timestrap, count, {
+                onSuccess: function(list, hasMsg) {
+                    //console.log(list);
+                    //console.log(hasMsg);
+                    hasMsginfo=hasMsg;
+                    if(!first_info){
+                        list.reverse();
+                    }
+                    // list => Message 数组。
+                    // hasMsg => 是否还有历史消息可以获取。
+                    //获取聊天记录渲染到页面中
+                    for(var j=0;j<list.length;j++){
+                        if(list[j].objectName=='91:ask'){
+                            continue;
+                        }
+                        if(list[j].objectName=='RC:TxtMsg'){
+                            if(list[j].senderUserId==userId){
+                                var tmpR='<li class="rt">'+
+                                        '<a href="#" class="facePic">'+
+                                        '<img src="'+my_url+'" alt="">'+
+                                        '</a>'+
+                                        '<div class="commt">'+list[j].content.content+'</div>'+
+                                        '</li>';
+                                if(first_info){
+                                    $('#chatCon ul').append(tmpR);
+                                }else{
+                                    $('#chatCon ul').prepend(tmpR);
+                                }
+                            }else{
+                                var z=j;
+                                $.ajax({
+                                    type:'get',
+                                    url:window.YLZ.base+'com/docs/'+list[z].senderUserId+'?token='+userToken,
+                                    async:false,
+                                    success:function(data){
+                                        //console.log(z);
+                                        flock_url=data.doc.image;
+                                        //console.log(list[z].content.content);
+                                        if(flock_url==''||flock_url==null){
+                                            flock_url='../statics/img/default_head.jpg'
+                                        }
+                                        var tmpL='<li class="lt">'+
+                                                '<a href="#" class="facePic">'+
+                                                '<img src="'+flock_url+'" alt="">'+
+                                                '</a>'+
+                                                '<div class="commt">'+ list[z].content.content +'</div>'+
+                                                '</li>';
+                                        if(first_info){
+                                            $('#chatCon ul').append(tmpL);
+                                        }else{
+                                            $('#chatCon ul').prepend(tmpL);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        if(list[j].objectName=="RC:ImgMsg"){
+                            if(list[j].senderUserId==userId){
+                                var tmpR='<li class="rt">'+
+                                        '<a href="#" class="facePic">'+
+                                        '<img src="'+my_url+'" alt="">'+
+                                        '</a>'+
+                                        '<div class="commt imgBg"><img class="imgSmall" src="'+list[j].content.imageUri+'" alt=""></div>'+
+                                        '</li>';
+                                if(first_info){
+                                    $('#chatCon ul').append(tmpR);
+                                }else{
+                                    $('#chatCon ul').prepend(tmpR);
+                                }
+                            }else{
+                                var k=j;
+                                $.ajax({
+                                    type:'get',
+                                    url:window.YLZ.base+'com/docs/'+list[k].senderUserId+'?token='+userToken,
+                                    async:false,
+                                    success:function(data){
+                                        flock_url=data.doc.image;
+                                        if(flock_url==''||flock_url==null){
+                                            flock_url='../statics/img/default_head.jpg'
+                                        };
+                                        var tmpL='<li class="lt">'+
+                                                '<a href="#" class="facePic">'+
+                                                '<img src="'+flock_url+'" alt="">'+
+                                                '</a>'+
+                                                '<div class="commt imgBg"><img class="imgSmall" src="'+list[k].content.imageUri+'" alt=""></div>'+
+                                                '</li>';
+                                        if(first_info){
+                                            $('#chatCon ul').append(tmpL);
+                                        }else{
+                                            $('#chatCon ul').prepend(tmpL);
+                                        }
+                                        DrawImage();
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+                    if(first_info){
+                        //console.log($('#chat_content').height());
+                       // console.log($(window).height());
+//                                          $('document').scrollTop($('#chat_content').height()-$(window).height());
+                        $('#chatCon').scrollTop($('#chat_content').height()-$(window).height()+200);
+                        first_info=false;
+                    }
+                    load_info=true;
+                },
+                onError: function(error) {
+                    //console.log("GetHistoryMessages,errorcode:" + error);
+                }
+            });
+            //图片点击放大
+            $('#chat_content').on('click','li .imgSmall',function(){
+                var big=$(this);
+                $('#big_img').css('display','block');
+                $('#bigImg').attr('src',big.attr('src'))
+            });
+            $('#big_img').on('click',function(){
+                $(this).css('display','none')
+            })
+            clear_info(doctorTeamId)
+        }
+        function display(){
+            $('#box').css('display','none');
+        }
+
+        // 连接状态监听器
+        RongIMClient.setConnectionStatusListener({
+            onChanged: function (status) {
+                switch (status) {
+                    case RongIMLib.ConnectionStatus.CONNECTED:
+                        //console.log('链接成功');
+                        break;
+                    case RongIMLib.ConnectionStatus.CONNECTING:
+                       // console.log('正在链接');
+                        break;
+                    case RongIMLib.ConnectionStatus.DISCONNECTED:
+                        //console.log('断开连接');
+                        break;
+                    case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
+                       // console.log('其他设备登录');
+                        break;
+                    case RongIMLib.ConnectionStatus.DOMAIN_INCORRECT:
+                        console.log('域名不正确');
+                        break;
+                    case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+                        console.log('网络不可用');
+                        break;
+                }
+            }});
+
+//清除历史消息
+        function clear_info(target){
+            var conversationType = RongIMLib.ConversationType.GROUP;
+            var targetId = target;
+            RongIMClient.getInstance().clearUnreadCount(conversationType,targetId,{
+                onSuccess:function(){
+                    // 清除未读消息成功。
+                },
+                onError:function(error){
+                    // error => 清除未读消息数错误码。
+                }
+            });
+        }
+        // 消息监听器
+        RongIMClient.setOnReceiveMessageListener({
+            // 接收到的消息
+            onReceived: function (message) {
+                // 判断消息类型
+                switch(message.messageType){
+                    case RongIMClient.MessageType.TextMessage:
+                        //获取群成员头像信息
+                        $.ajax({
+                            type:'get',
+                            url:window.YLZ.base+'com/docs/'+message.senderUserId+'?token='+userToken,
+                            data:'',
+                            success:function(data){
+                                 flock_url=data.doc.image;
+                                if(flock_url==''||flock_url==null){
+                                    flock_url='../statics/img/default_head.jpg'
+                                }
+                                var tmpL='<li class="lt">'+
+                                        '<a href="#" class="facePic">'+
+                                        '<img src="'+flock_url+'" alt="">'+
+                                        '</a>'+
+                                        '<div class="commt">'+ message.content.content +'</div>'+
+                                        '</li>';
+                                $('#chatCon ul').append(tmpL);
+                                clear_info(doctorTeamId)
+                            }
+                        });
+                        break;
+                    case RongIMClient.MessageType.VoiceMessage:
+                        // 对声音进行预加载
+                        // message.content.content 格式为 AMR 格式的 base64 码
+                        break;
+                    case RongIMClient.MessageType.ImageMessage:
+                        // message.content.content => 图片缩略图 base64。
+                        // message.content.imageUri => 原图 URL。
+//                        console.log(message.content.content);
+                        $.ajax({
+                            type:'get',
+                            url:window.YLZ.base+'com/docs/'+message.senderUserId+'?token='+userToken,
+                            data:'',
+                            success:function(data){
+                                 flock_url=data.doc.image;
+                                if(flock_url==''||flock_url==null){
+                                    flock_url='../statics/img/default_head.jpg'
+                                }
+                                var tmpL='<li class="lt">'+
+                                        '<a href="#" class="facePic">'+
+                                        '<img src="'+flock_url+'" alt="">'+
+                                        '</a>'+
+                                        '<div class="commt imgBg"><img class="imgSmall" src="'+message.content.imageUri+'" alt=""></div>'+
+                                        '</li>';
+                                $('#chatCon ul').append(tmpL);
+                                DrawImage();
+                                clear_info(doctorTeamId);
+                            }
+                        });
+
+                        break;
+                    case RongIMClient.MessageType.DiscussionNotificationMessage:
+                        // message.content.extension => 讨论组中的人员。
+                        break;
+                    case RongIMClient.MessageType.LocationMessage:
+                        // message.content.latiude => 纬度。
+                        // message.content.longitude => 经度。
+                        // message.content.content => 位置图片 base64。
+                        break;
+                    case RongIMClient.MessageType.RichContentMessage:
+                        // message.content.content => 文本消息内容。
+                        // message.content.imageUri => 图片 base64。
+                        // message.content.url => 原图 URL。
+                        break;
+                    case RongIMClient.MessageType.InformationNotificationMessage:
+                        // do something...
+                        break;
+                    case RongIMClient.MessageType.ContactNotificationMessage:
+                        // do something...
+                        break;
+                    case RongIMClient.MessageType.ProfileNotificationMessage:
+                        // do something...
+                        break;
+                    case RongIMClient.MessageType.CommandNotificationMessage:
+                        // do something...
+                        break;
+                    case RongIMClient.MessageType.CommandMessage:
+                        // do something...
+                        break;
+                    case RongIMClient.MessageType.UnknownMessage:
+                        // do something...
+                        break;
+                    default:
+                    // do something...
+                }
+            }
+        });
+        function DrawImage() {
+            var image = $('.imgSmall').last();
+//              var image = new Image();
+//              image.src = ImgD.src;
+            if (image.width() > 0 && image.height() > 0) {
+                if (image.width() / image.height() >= 120 / 90) {
+                    if (image.width() > 120) {
+//                          ImgD.width=120;
+                        image.attr('width', '120px');
+                        image.attr('height', (image.height() * 120) / image.width() + 'px');
+//                          ImgD.height=(image.height*120)/image.width;
+                    } else {
+                        image.attr('width', image.width() + 'px');
+                        image.attr('height', image.height() + 'px');
+//                          ImgD.width=image.width;
+//                          ImgD.height=image.height;
+                    }
+                    image.attr('alt', image.width() + 'x' + image.height())
+                }
+                else {
+                    if (image.height() > 90) {
+                        image.attr('height', 90 + 'px');
+                        image.attr('width', (image.width() * 90) / image.height() + 'px');
+//                          ImgD.width=(image.width*90)/image.height;
+                    } else {
+//                          ImgD.width=image.width;
+//                          ImgD.height=image.height;
+                        image.attr('width', image.width() + 'px');
+                        image.attr('height', image.height() + 'px');
+                    }
+                    image.attr('alt', image.width() + 'x' + image.height())
+                }
+            }
+        }
+        function sendMsg(msg,targetId) {
+            var conversationtype = RongIMLib.ConversationType.GROUP; // 群聊
+            RongIMClient.getInstance().sendMessage(conversationtype, targetId, msg, {
+                        onSuccess: function (message) {
+                            //message 为发送的消息对象并且包含服务器返回的消息唯一Id和发送消息时间戳
+                            console.log(message)
+                        },
+                        onError: function (errorCode, message) {
+                            var info = '';
+                            switch (errorCode) {
+                                case RongIMLib.ErrorCode.TIMEOUT:
+                                    info = '超时';
+                                    break;
+                                case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+                                    info = '未知错误';
+                                    break;
+                                case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+                                    info = '在黑名单中，无法向对方发送消息';
+                                    break;
+                                case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+                                    info = '不在讨论组中';
+                                    break;
+                                case RongIMLib.ErrorCode.NOT_IN_GROUP:
+                                    info = '不在群组中';
+                                    break;
+                                case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+                                    info = '不在聊天室中';
+                                    break;
+                                default :
+                                    break;
+                            }
+                            console.log('发送失败:' + info);
+                        }
+                    }
+            );
+        }
+    });
+</script>
+
+</body>
+</html>

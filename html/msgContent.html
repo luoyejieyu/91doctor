@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>消息内容</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+    <script src="../statics/js/common/zepto.min.js"></script>
+    <script src="../statics/js/common/basic.js"></script>
+    <style>
+        .container{
+            padding: 10px;
+        }
+       .title{
+           text-align: center;
+         margin: 5px 0 10px 0;
+           font-weight: 500;
+       }
+        .time{
+            color: #B2B2B2;
+        }
+        .tit p{
+            text-align: center;
+            margin-top: 20px;
+            color: #4482CD;
+        }
+
+        .activity{
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        .addre{
+            text-indent: 20px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <em>
+            <img src="../statics/img/enter.png" alt="">
+        </em>
+        <span>男性</span>
+    </div>
+    <section id="messageCon">
+       <!--  <div class="top">
+            <img src="../statics/img/enter.png" alt="">
+            <span>龙华医院冬季养生节</span>
+        </div>
+        <div class="container">
+            <h2 class="title">龙华医院冬季养生节</h2>
+            <div class="time">
+                 <span>2016-10-14</span>&nbsp;&nbsp;&nbsp;杏林医院
+            </div>
+            <div class="tit">
+                <p >集百草之精粹，养生命之灵机，三金药材一辆高，调补结合百病消</p>
+                <p>龙华医院四季养生之东陵高仿即将开越</p>
+            </div>
+            <img src="../statics/img/1.jpg" alt="" class="activity">
+            <p class="addre">上海中医药大学附属龙华</p>
+            <p class="colo">龙华医院高芳具有以下特点：</p>
+            <br>
+            <p class="addre">一人一方，个性化定制，注重个人体质。</p>
+        </div> -->
+    </section>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+
+<script id="messageConTpl" type="text/html">
+<div class="container marTop5">
+    <h2 class="title"><%=title%></h2>
+    <div class="time"><span><%=date%></span>&nbsp;&nbsp;&nbsp;<%=author%></div>
+    <div class="con"><%=content%></div>
+</div>
+</script>
+<script type="text/javascript">
+$(function(){
+    var $messageCon = $('#messageCon');
+    var bt = baidu.template;
+    var mdNum = localStorage.getItem('mdid');
+    var messageConUrl = window.YLZ.base+'com/msgs/'+mdNum+'?token='+localStorage.getItem("userToken1");
+    //消息内容
+    $.ajax({
+       type:'get',
+       url: messageConUrl,
+       data:{
+          
+       },
+       success:function(data){
+           $('.top span').html(data.title);
+         var html1 = bt('messageConTpl',data);
+         $messageCon.html(html1);
+       }
+    });
+});
+</script>
+</body>
+</html>

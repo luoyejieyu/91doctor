@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>相关医院</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body class="background">
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>相关医院</span>
+</div>
+    <div class="hL marTop5">
+
+    </div>
+<p id="more_reahos" class="no_more"></p>
+<h3 class="no_more" id="no_reahos"></h3>
+<footer>
+    <div class="footer">
+        <p>
+            <em id="logo"></em><br>
+            值得信赖的互联网医院
+        </p>
+    </div>
+</footer>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/xyfpublic/xyfpublic.js"></script>
+<script>
+    (function(window,undefined){
+        //测试数据
+//        var userToken='ef73b0ef1b2c4512a7951e2b50a4ebcf2b154627c8fee4614aae4989795cfb1b0';
+//        var searchvalue='';
+        //正式数据
+        var userToken=localStorage.getItem('userToken');
+        var searchvalue=localStorage.getItem('searchvalue');
+        console.log(searchvalue)
+        function hospitalList(data){
+            for(var i=0;i<data.length;i++){
+                var html='';
+                 html+='<dl data-id="'+data[i].id+'">';
+                 html+='<dt><img src="'+data[i].image+'" alt=""></dt>';
+                 html+='<dd><h3>'+data[i].name+'</h3></dd>';
+                if(data[i].type!=''&&data[i].type==undefined){
+                    html+='<dd><span>'+data[i].type+'</span>';
+                }
+                if(data[i].medType!=''&&data[i].medType!=undefined){
+                    html+='<span>'+data[i].medType+'</span>';
+                }
+                 html+='</dd>';
+                 html+='</dl>';
+               $('.hL').append(html)
+            }
+        }
+        $('.hL').on('click','dl',function(){
+            localStorage.setItem('xyfId',$(this).attr('data-id'));
+            location.href='recommend_hospital.html';
+        });
+        //ajax请求渲染页面
+        var hospitalNum=1;
+        var hospitalSize=6;
+        loadPagedoc(hospitalNum,hospitalSize);
+        //所有相关医院的列表
+        function loadPagedoc(page,size){
+            $.ajax({
+                type:'get',
+                url: insuranceListUrl(page,size),
+                data:'',
+                success:function(data){
+                    hospitalList(data.hospitals);
+                    if(data.count<=page*size){
+                        $('#no_reahos').html('没有更多了');
+                        $('#more_reahos').html('');
+                    }else{
+                        $('#more_reahos').html('查看更多医院');
+                        $('#no_reahos').html('');
+                        hospitalNum++;
+                    }
+                }
+            });
+        }
+        function insuranceListUrl(page,size,sort){
+            return  window.YLZ.base+'pat/hospitals?searchkey='+searchvalue+'&token='+userToken+'&page='+page+'&size='+size;
+        }
+        $('#more_reahos').on('click',function(){
+            loadPagedoc(hospitalNum,hospitalSize);
+        });
+    })(window);
+</script>
+</html>

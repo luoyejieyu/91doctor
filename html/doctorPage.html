@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>医生主页</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="container3">
+    <div class="top">
+        <em>
+            <img src="../statics/img/enter.png" alt="">
+        </em>
+        <span>王明</span>
+    </div>
+    <div  id="article" class="marTop">
+        <div class="attention">
+            <span>关注</span>
+        </div>
+        <dl class="dP_top">
+            <!--<dt>-->
+                <!--<img src="../statics/img/1.jpg" alt="" class="headPhoto">-->
+            <!--</dt>-->
+            <!--<dd><span>徐毅飞</span>&nbsp;&nbsp;&nbsp;-->
+                <!--<img src="../statics/img/yellow.png" alt="">-->
+                <!--<img src="../statics/img/yellow.png" alt="">-->
+                <!--<img src="../statics/img/yellow.png" alt="">-->
+                <!--<img src="../statics/img/yellow.png" alt="">-->
+                <!--<img src="../statics/img/gray.png" alt="">-->
+            <!--</dd>-->
+            <!--<dd>-->
+                <!--<span>北京儿童医院</span><br>-->
+                <!--<span>儿科</span><span class="malr">|</span>-->
+                <!--<span>主任医生</span> <span class="malr">|</span><span>副教授</span><br>-->
+               <!--<span>北京市</span><span class="malr">|</span> <span>朝阳区</span>-->
+            <!--</dd>-->
+            <!--<dd><img src="../statics/img/1.jpg" alt="">-->
+                <!--<span>平安保险</span>保障医生真实性，问诊有保障-->
+            <!--</dd>-->
+        </dl>
+    </div>
+    <div id="doc_describe">
+        <ul class="enquiry">
+            <li>接诊人次 <span>100</span>次</li>
+            <li>解答问题 <span>200</span>个</li>
+            <li>工作年限 <span>30</span>年</li>
+            <li>帮助人数 <span>20</span>人</li>
+            <li class="inquiry">我要问诊</li>
+        </ul>
+        <h3 class="introduce2">医生介绍 <span class="upfold"> <em>展开</em> <img src="../statics/img/enter.png" alt=""></span></h3>
+        <p class="intro">省内一级妇科专家省内一级妇科专家省内一级妇科专家省内一级妇科专家省内一级妇科专家省内一级妇科专家
+            省内一级妇科专家省内一级妇科专家省内一级妇科专家省内一级妇科专家省内一级妇科专家。
+        </p>
+        <h3 class="introduce2">评价 (<i>0</i>)<a href="#"><em class="malr">更多</em><img src="../statics/img/enter.png" alt=""></a></h3>
+    </div>
+    <article>
+        <div class="doctor_evaluation">
+
+        </div>
+    </article>
+</div>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/xyfpublic/xyfpublic.js"></script>
+<script>
+    (function(window,undefined){
+        //测试数据
+//        var userToken='935e1a2a518343e08c53f9cd260b5f2f220000000226e0dbfd4e9449c9fd5fbee53d9fc76';
+//        var userId='20000000b154627c8fee4614aae4989795cfb1b0';
+//        var doctorId='00000000f9fdf1ef225f445d8cd00654732ece44';
+        //正式数据
+        var userToken=localStorage.getItem('userToken');
+        var userId=localStorage.getItem('userId');
+        var doctorId=localStorage.getItem('doctorId');
+        var staus=true;
+        var atten_staus;
+        var enquiry_soan=$('.enquiry span');
+//        跳转到评价页面；
+        $('.introduce2').on('click','a',function(){
+//            localStorage.setItem('xyfid',doctorId);
+           location.href='doctorEvaluation.html'
+        });
+        //页面的跳转到我要问诊页面
+        $('.inquiry').on('click',function(){
+            localStorage.setItem('drop','no');
+            window.location.href='fxychat.html';
+        });
+        $('.doctor_evaluation dl').on('click',function(){
+            window.location.href='doctorEvaluation.html';
+        });
+//        展开收起的js样式
+        $('.upfold').on('click',function(){
+            if(staus){
+                staus=false;
+                $('.intro').css({'height':'auto'});
+                $('.upfold img').css('transform','rotate(-90deg)');
+                $('.upfold em').html('收起')
+            }else{
+                staus=true;
+                $('.intro').css({'height':'4.8rem'});
+                $('.upfold img').css('transform','rotate(90deg)');
+                $('.upfold em').html('展开')
+            }
+
+        });
+        //关注和取消关注
+        $('.attention span').on('click',function(){
+            if(atten_staus){
+                //关注医生
+                atten_staus=false;
+                $.ajax({
+                    type:'post',
+                    url:YLZ.base+'com/patdoc/relations?token='+userToken,
+                    contentType:'application/json; charset=utf-8',
+                    dataType:'json',
+                    data:JSON.stringify({
+                        'patId':userId,
+                        'docId':doctorId,
+                        'type':3
+                    }),
+                    success:function(data){
+                        $('.attention span').html('取消');
+                    }
+                })
+            }else{
+                //取消关注
+                atten_staus=true;
+               $.ajax({
+                   type:'delete',
+                   url:YLZ.base+'pat/followers/'+doctorId+'?token='+userToken,
+                   data:'',
+                    success:function(data){
+                        $('.attention span').html('关注');
+                    }
+                })
+            }
+        });
+        //判断医生是否被关注
+        $.ajax({
+            type:'get',
+            url:window.YLZ.base+'pat/followers/?token='+userToken+'&docId='+doctorId,
+            success:function(data){
+                if(data.result.code==80008){
+                    $('.attention span').html('关注');
+                    atten_staus=true;
+                }else{
+                    $('.attention span').html('取消');
+                    atten_staus=false;
+                }
+            }
+        });
+//        查询医生相关信息
+        function doctor_information(data){
+            $('.top span').html(data.name);
+            var html='';
+            html+='<dt>';
+            if(data.image==''||data.image==null){
+                html+=' <img src="../statics/img/default_head.jpg" alt="" class="headPhoto">';
+            }else{
+                html+=' <img src="'+data.image+'" alt="" class="headPhoto">';
+            }
+            html+='</dt>';
+            html+='<dd><span style="font-size: 1.6rem">'+data.name+'</span>&nbsp;&nbsp;&nbsp;';
+            var html2=window.cloudFunction.addStar(data,html);
+            html2+=' </dd>';
+            html2+='  <dd>';
+            if(data.hospital!=''&&data.hospital!=null){
+                html2+=' <span>'+data.hospital+'</span><br>';
+            }
+            if(data.department!=null&&data.department!=''){
+                html2+=' <span>'+data.department+'</span>';
+            }
+            if(data.title!=null&&data.title!=''){
+                html2+='<span class="malr">&nbsp;&nbsp;</span><span>'+data.title+'</span>'
+            }
+            if(data.educationTitle!=null&&data.educationTitle!=''){
+                html2+='<span class="malr">&nbsp;&nbsp;</span><span>'+data.educationTitle+'</span>'
+            }
+            html2+='<br><span>'+data.province+'</span><span class="malr">&nbsp;&nbsp;</span><span>'+data.district+'</span>';
+            html2+=' </dd>';
+            html2+='<dd>';
+//            html2+=' <span>平安保险</span>保障医生真实性，问诊有保障';
+            html2+=' </dd>';
+            $('.dP_top').append(html2);
+        }
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'com/docs/'+doctorId+'?token='+userToken,
+            data:'',
+            success:function(data){
+                doctor_information(data.doc);
+                localStorage.setItem('doctorName',data.doc.name);
+                enquiry_soan.eq(0).html(data.doc.askNumber);
+                enquiry_soan.eq(1).html(data.doc.qaCount);
+                enquiry_soan.eq(2).html(data.doc.workyear);
+                enquiry_soan.eq(3).html(data.doc.helpCount);
+                $('.intro').html(data.doc.desc);
+            }
+        });
+
+//查询医生问诊评价
+        function doctor_evaluation(data){
+            for(var i=0;i<data.length;i++){
+                var html='';
+                var dataCircle=data[i];
+                html+='<dl>';
+                html+=' <dt><img src="'+data[i].image+'" alt=""></dt>';
+                html+=' <dd>'+data[i].name.substr(0,1)+'**<span class="eva_time">'+YLZ.getLocalTime(data[i].date)+'</span>';
+                html+='</dd>';
+                html+='<dd>';
+                html+='<span class="img">';
+                var html2=window.cloudFunction.addStar(dataCircle,html);
+                html2+='</span>';
+                html2+='</dd>';
+                html2+=' <p style="text-indent: 20px;line-height: 2rem">'+data[i].content+'</p>';
+                html2+='</dl>';
+                $('.doctor_evaluation').append(html2);
+            }
+
+        }
+       $.ajax({
+            type:'get',
+            url:YLZ.base+'com/docs/'+doctorId+'/scores?token='+userToken+'&page=1&size=2',
+            data:'',
+            success:function(data){
+                doctor_evaluation(data.scores);
+                $('.introduce2 i').html(data.count)
+            }
+        });
+    })(window)
+</script>
+</html>

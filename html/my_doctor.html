@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>我的医生</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<!--<div class="top">-->
+    <!--<em>-->
+        <!--<img src="../statics/img/enter.png" alt="">-->
+    <!--</em>-->
+    <!--<span>问诊详情</span>-->
+<!--</div>-->
+<header>
+    <div class="my_doc">
+        <span >问诊</span>
+        <span class="my_doctor">我的医生</span>
+    </div>
+</header>
+<section>
+    <div class="doctor_content">
+        <div id="my_doctor">
+            <ul class="myContent" id="myDoctor">
+
+            </ul>
+            <p id="doctorMore" class="no_more"></p>
+            <h3 class="no_more" id="no_more"></h3>
+            <div class="more">
+                <img src="../statics/img/more.png" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+<footer>
+    <div class="footer">
+        <p>
+            <em id="logo"></em><br>
+            值得信赖的互联网医院
+        </p>
+    </div>
+</footer>
+<nav class="nav">
+    <dl>
+        <dt><a href="home_page.html"><img src="../statics/img/home_b.png" alt=""></a></dt>
+        <dd><a href="home_page.html">首页</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="my_doctor.html"><img src="../statics/img/doc_g.png" alt=""></a></dt>
+        <dd ><a href="my_doctor.html" class="colo">医生</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="infor.html"><img src="../statics/img/infa_b.png" alt=""></a></dt>
+        <dd><a href="infor.html">消息</a></dd>
+    </dl>
+    <dl>
+        <dt><a href="my_Introduce.html"><img src="../statics/img/me_b.png" alt=""></a></dt>
+        <dd><a href="my_Introduce.html">我的</a></dd>
+    </dl>
+</nav>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script>
+    (function(window,undefined){
+        //测试数据
+//        var userToken='8f4f99dcc4de44a7b880fd9ac604596e2200000000c3e38142c4d4d269e7bed90941fd6ef';
+//        var userId='200000000c3e38142c4d4d269e7bed90941fd6ef';
+        //正式数据
+        var userToken=localStorage.getItem('userToken');
+        var userId=localStorage.getItem('userId');
+        $('.nav dl').eq(0).on('tap',function(){
+            location.href='home_page.html'
+        });
+        var $span=$('.my_doc span');
+//        跳转到医生问诊
+        $span.eq(0).on('click',function(){
+           location.href='doctor_inquiry.html'
+        });
+//跳转到聊天界面
+        $('.doctor_content').on('click','li',function(){
+            localStorage.setItem('doctorId',$(this).attr('data-id'));
+            location.href='fxychat.html';
+        });
+//    跳转到搜索界面
+        $('.more').on('click','img',function(){
+            window.location.href='search_page.html'
+        });
+
+//      ajax请求我的医生列表
+        function doctorList(data){
+            for(var i=0;i<data.length;i++){
+                var html='';
+                html+='<li class="mc" data-id="'+data[i].docId+'">';
+                if(data[i].image==''||data[i].image==null){
+                    html+='<span><img src="../statics/img/logo.png" alt=""></span>';
+                }else{
+                    html+='<span><img src="'+data[i].image+'" alt=""></span>';
+                }
+                html+='<div class="content">';
+                html+='<h4><span>'+data[i].name+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+                if(data[i].title!=''&&data[i].title!=null){
+                    html+='<span>'+data[i].title+'</span>&nbsp;&nbsp;&nbsp;&nbsp;'
+                }
+                if(data[i].department!=''&&data[i].department!=null){
+                    html+='<span>'+data[i].department+'</span>'
+                }
+                html+='</h4>';
+                html+='<p class="address">'+data[i].hospital+'</p>';
+                html+='</div>';
+                html+='</li>';
+                $('#myDoctor').append(html)
+            }
+        }
+        var pageNum=1;
+        var pageSize=8;
+        loadPage(pageNum,pageSize);
+        //查询我的医生列表
+        function loadPage(page,size){
+            $.ajax({
+                type:'get',
+                url: insuranceListUrl(page,size),
+                data:'',
+                success:function(data){
+                    if(data.result.code==0){
+                        doctorList(data.docs);
+                        if(data.count<page*size){
+                            $('#no_more').html('没有更多了');
+                            $('#doctorMore').html('');
+                        }else{
+                            $('#doctorMore').html('查看更多医生');
+                            pageNum++;
+                        }
+                    }else{
+                        alert('数据加载异常')
+                    }
+                }
+            });
+        }
+        function insuranceListUrl(page,size,sort){
+            return  window.YLZ.base+'pat/followers?token='+userToken+'&sort=&page='+page+'&size='+size;
+        }
+        $('#doctorMore').on('click',function(){
+            loadPage(pageNum,pageSize);
+        });
+
+    })(window)
+
+</script>
+</html>

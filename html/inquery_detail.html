@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>问诊详情</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>问诊详情</span>
+</div>
+<section id="wzAreas">
+  <section id="wzHis">
+  </section>
+   <!-- <h3 class="success inquery_start">问诊开始</h3> 
+   <ul class="inquiryDetail marTop5" id="inDeList">
+   </ul>
+   <h3 class="success suc_enquiry">问诊已完成</h3>
+   <div class="toEvaluation">
+   </div> -->
+ <!--   localStorage.getItem("userId") -->
+    <div class="toEvaluation">
+       
+    </div>
+</section>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+
+<script id="recordList" type="text/html">
+   <ul class="inquiryDetail marTop5" id="inDeList">
+    <%for(var i=0;i<msgs.length;i++){%>
+        <%if(msgs[i].senderId == localStorage.getItem("userId")){%>
+            <li class="clearfix">
+                <div class="img_right"><img src="<%=msgs[i].senderImage%>" alt=""></div>
+                <div class="out out_right">
+                    <span><%=msgs[i].msgContent%></span>
+                    <div class="arrow"></div>
+                </div>
+            </li>
+        <%}else{%>
+             <li class="clearfix ">
+                <div class="img_left"><img src="<%=msgs[i].senderImage%>" alt=""></div>
+                <div class="out out_left">
+                    <span><%=msgs[i].msgContent%></span>
+                    <div class="arrow"></div>
+                </div>
+            </li>
+        <%}%>
+    <%}%>
+   </ul>
+  
+</script>
+<script type="text/javascript">
+$(function(){
+    var $inDeList = $('#inDeList');
+    var bt = baidu.template;
+    var wzid1 = localStorage.getItem('wzid');
+    var evaStatus1 = localStorage.getItem('evastatus');
+   //var userToken='b154627c8fee4614aae4989795cfb1b0220000000b154627c8fee4614aae4989795cfb1b0';
+    var inDeListUrl = window.YLZ.base+'pat/askings/'+wzid1+'/detail?token='+localStorage.getItem("userToken1");
+     //var inDeListUrl = window.YLZ.base+'pat/askings/'+wzid1+'/detail?token='+userToken;                  
+    //查询问诊记录详情
+     $.ajax({
+       type:'get',
+       url: inDeListUrl,
+       data:{
+          
+       },
+       success:function(data){
+       
+        var dataP = JSON.parse(data.msgs);
+        var html1 = bt('recordList',dataP);
+          //console.log(html1);
+         $("#wzHis").append(html1);
+         if(evaStatus1=="0"){
+           $('.toEvaluation').html('<div class="goeval"><span>去评价</span><img src="../statics/img/evaluation.png" alt=""></div>');
+           $('.toEvaluation').on('click','.goeval',function(){
+              location.href = "evaluation_page.html";
+           });
+         }
+         
+       }
+    });
+});
+</script>
+</body>
+</html>

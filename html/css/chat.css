@@ -1,0 +1,61 @@
+body{font-family: "微软雅黑";background-color: #F7FAFA}
+*{margin:0;padding:0;list-style: none;}
+.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+.chatCon{min-height:300px;overflow-x:hidden;background:#F7FAFA;position: absolute;top: 55px;bottom: 55px;-webkit-overflow-scrolling: touch;overflow-y: auto;width: 100%;left: 0;right: 0;padding: 0}
+.chatCon ul{margin-top:70px;padding: 0 1rem}
+.chatCon li{margin-bottom: 10px;}
+.chatCon li:last-child{ margin-bottom: 6rem}
+.chatCon .lt{float:left;}
+.chatCon .lt .facePic{float:left;margin-right:10px;}
+.chatCon .lt .commt{font-size:0.9rem;float:left;background:#D7EEFF;padding:10px;color:black;border-radius: 9px;position: relative;max-width: 69%;top: 9px;word-break: break-all;}
+.chatCon .lt .commt .pic{max-width:80px;}
+.chatCon .rt{float:right;}
+.chatCon li{clear:both;}
+.chatCon .lt a img{width: 3.5rem;height: 3.5rem;border-radius: 50%}
+.chatCon .rt a img{width: 3.5rem;height: 3.5rem;border-radius: 50%}
+.chatCon .rt .facePic{float:right;margin-left: 10px;}
+.chatCon .rt .commt{font-size:0.9rem;float:left;background:#E6E6E6;padding:10px;color:black;border-radius: 9px;position: relative;max-width: 69%;top: 9px;word-break: break-all;}
+.chatCon .rt .commt .pic{max-width:100px;}
+.chatCon .lt .imgBg{background:none;}
+.chatCon .rt .imgBg{background:none;}
+#btnBox{clear:both;width: 100%;padding: 9px 0 0px 0;position: fixed;left: 0;right: 0;bottom: 0;background-color: white;}
+#btnBox .inp{margin: 0 6% 9px 4%;width: 57%;border: none;background-color: white;border-bottom: 1px solid #C8C8C8}
+#btnBox input{-webkit-appearance: none;outline: none}
+.chat_send{margin-left: 4%}
+.emoji_div{}
+.geoPosition{width:100%;height:52px;position:fixed;background:#fff;z-index: 1000;left: 0;right: 0;top: 0}
+.geoPosition .backBtn{position:absolute;top:13px;left:10px;width:35px;height:35px;display: inline-block;background:url(../../statics/img/reWhite.png) no-repeat;}
+.geoPosition .nameDoc{font-size: 1.1rem;color:#333;text-align: center;height:56px;line-height: 33px;font-weight: normal;}
+.geoPosition .perSign{position:absolute;top:15px;right:13px;width:25px;height:25px;display: inline-block;background:url(../../statics/img/perLogo.png) no-repeat;background-size: contain}
+.facePic img{border-radius: 25px;}
+.importArea .inp{height:20px;line-height: 30px;padding:5px 10px;border:1px solid #ccc;outline: none;}
+.whiteBg h3{background:#57d1a8;color:#fff!important;height: 5.5rem}
+.importArea .send{height:30px;color:#fff;padding:0 10px;border-radius: 5px;border:none;outline:none;background:#57d1a8;margin-left: -0.7rem}
+.uploadArea{position: relative;}
+.uploadArea .sendPhoto{position:absolute;width:43px;height:27px;top:-1px;left:-4px;}
+.uploadArea .upPic{width:39px;height:28px;opacity:0;}
+.uploadArea p{font-size:0.8rem;position: absolute;top:15px;left:55px;color:#999;letter-spacing: 1px;}
+.chat_expert{position: relative; top: -11px; font-size: 12px;}
+#chatCon .sanjiao_left{
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-right: 12px solid #D7EEFF;
+    position: absolute;
+    left: -9px;
+    top: 6px;
+}
+#chatCon .sanjiao_right{
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 12px solid #E6E6E6;
+    position: absolute;
+    right: -9px;
+    top: 5px;
+}
+.commt .imgSmall{max-width: 120px;}

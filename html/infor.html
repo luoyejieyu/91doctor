@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>消息</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>消息</span>
+</div>
+    <div class="information clearfix marTop5" id="soktBox">
+        <dl class="celarfix">
+            <dt class="flf"><img src="../statics/img/doctor_g.png" alt=""></dt>
+            <dd class="infoType" data-infotype="202"><a href="#">提问通知</a></dd>
+        </dl>
+        <dl class="celarfix">
+            <dt class="flf"><img src="../statics/img/appointment.png" alt=""></dt>
+            <dd class="infoType" data-infotype="204"><a href="#">问诊通知</a></dd>
+        </dl>
+        <!--<dl class="celarfix">-->
+            <!--<dt class="flf"><img src="../statics/img/doctor.png" alt=""></dt>-->
+            <!--<dd><a href="#">全科医生</a><span class="flr">昨天13:00</span></dd>-->
+        <!--</dl>-->
+
+    </div>
+    <!--<div class="resultTip"></div>-->
+    <input id="pageHid" class="pageHid" type="hidden" value="1">
+    <input id="sizeHid" class="sizeHid" type="hidden" value="3">
+    <nav class="nav">
+        <dl>
+            <dt><a href="home_page.html"><img src="../statics/img/home_b.png" alt=""></a></dt>
+            <dd><a href="home_page.html">首页</a></dd>
+        </dl>
+        <dl>
+            <dt><a href="my_doctor.html"><img src="../statics/img/doc_b.png" alt=""></a></dt>
+            <dd><a href="my_doctor.html">医生</a></dd>
+        </dl>
+        <dl>
+            <dt><a href="infor.html"><img src="../statics/img/infa_g.png" alt=""></a></dt>
+            <dd ><a href="infor.html" class="colo">消息</a></dd>
+        </dl>
+        <dl>
+            <dt><a href="my_Introduce.html"><img src="../statics/img/me_b.png" alt=""></a></dt>
+            <dd ><a href="my_Introduce.html">我的</a></dd>
+        </dl>
+    </nav>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script type="text/javascript">
+$(function(){
+    //存储消息类型
+    var type = '202'||'204';
+    $('.nav dl').eq(0).on('tap',function(){
+        location.href='home_page.html'
+    });
+    $('#soktBox').on('click','dl',function(){
+        var that = $(this);
+        localStorage.setItem("infotype",that.find('.infoType').data('infotype'));
+        location.href='message_detail.html';
+    })
+})
+</script>
+</body>
+</html>

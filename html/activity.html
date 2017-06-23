@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>活动详情页</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span class="c-txt activity_title">龙华医院冬季养生节</span>
+</div>
+<div class="container marTop5">
+    <div class="message_head">
+    </div>
+    <article>
+        <div id='content'>
+        </div>
+    </article>
+</div>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script>
+    (function(window,undefined){
+        var activityid=localStorage.getItem('bannerId');
+        function addActivity(data){
+            $('.top span,title').html(data.title);
+            var html='';
+            html+='<div class="message_head">';
+            html+='<h2 class="title">'+data.subTitle+'</h2>';
+            html+='<div class="time">';
+            html+=' <span>'+data.date+'</span>&nbsp;&nbsp;&nbsp;<span>'+data.owner+'</span>';
+            html+=' </div>';
+            html+='</div>';
+            $('.message_head').append(html);
+        }
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'pat/banners/'+activityid+'?token='+localStorage.getItem('userToken'),
+            data:'',
+            success:function(data){
+                $('title').html(data.banner.title);
+                addActivity(data.banner);
+                var html2=data.banner.content;
+                $('#content').append(html2);
+
+            }
+        })
+    })(window)
+</script>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <meta name="screen-orientation" content="portrait">
+    <title>问医生</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body >
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>问医生</span>
+</div>
+    <div class="oS marTop">
+        <h3>完善更多的信息将帮助您找到最合适的医生</h3>
+        <div class="onlineTips"></div>
+        <p id="deTags" class="deTags">
+            <span data-departcode="024">内科</span>
+            <span data-departcode="025">外科</span>
+            <span data-departcode="029">儿科</span>
+            <span data-departcode="026">妇科</span>
+            <span data-departcode="027">中医</span>
+            <span data-departcode="028">全科</span>
+        </p>
+        <textarea name="" id="onlineDes" cols="30" rows="6" placeholder="描述您的问题，包括身体状况、疾病和症状等，我们将会推荐最专业的医生为您服务，并且保证您的隐私安全。"></textarea>
+        <span class="num"><em id="nowCon">0</em> /<em id="totalCon">300</em></span>
+        <!-- <section id="picBox">
+            <span id="imgBox"></span>
+           <span class="add_picture">
+               <input class="add_photo" type="file" id="pickfiles">
+               <img src="../statics/img/add_photo.png" alt="">
+           </span>
+        </section> -->
+        <section id="picBox" class="picOnline">
+          <span id="imgBox"></span>
+          <div class="add_picture" id="container">
+              <a class="add_photo" id="pickfiles" href="#"></a>
+          </div>
+           <div class="picTips">
+            添加症状图片或检查图片&nbsp;&nbsp;帮助医生更好的判断
+          </div>
+        </section>
+       
+    </div>
+    <input type="button" value="提交" class="btn" id="onlineSub">
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/jquery-1.7.2.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/plupload.full.min.js"></script>
+<script src="../statics/js/common/qiniu.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script type="text/javascript">
+$(function(){
+    //正式数据
+    var userToken=localStorage.getItem("userToken");
+    var $deTags = $('#deTags');
+    var depVal;
+    var bt = baidu.template;
+    var imgArr=[];
+    var $imgBox = $('#imgBox');
+    var onlineProUrl = window.YLZ.base+'pat/qas?token='+userToken;
+    var timer;
+   
+    //获取科室
+    $deTags.on('click','span',function(){
+        var that = $(this);
+        that.addClass('on').siblings().removeClass('on');
+        depVal=that.data('departcode');
+//      var that = $(this);
+//      if(that.hasClass('on')){
+//        that.removeClass('on');
+//      }else{
+//        that.addClass('on');
+//        depVal = that.text();
+//      }
+    });
+     //字数统计
+    $('#onlineDes').on('keyup',function(){
+        var that = $(this),
+            areaCon = that.val(),
+            len1 = YLZ.len(areaCon),
+            nowCon = $('#nowCon'),
+            totalCon = $('#totalCon');
+        nowCon.text(len1);
+        totalCon.text(300-len1);
+      });
+   
+    //上传token获取
+
+    var qnUpTokenUrl = window.YLZ.base+'com/token/qiniu/uptoken?bucket=yyy-pat&token='+userToken;
+
+    $.ajax({
+      type:'get',
+      url:qnUpTokenUrl,
+      data:{
+
+      },
+      success:function(data){
+         upPicToken = data.token;
+         yuming = data.domain;
+         //console.log(upPicToken)
+          // document.querySelector('#pickfiles').addEventListener('change', function (){
+               // var oFile= file.getNative();
+                     
+             //});
+              //上传
+          var uploader = Qiniu.uploader({
+             runtimes: 'html5,flash,html4', 
+             browse_button: 'pickfiles',  
+             uptoken : upPicToken, 
+              unique_names: true,
+              domain: 'yyy-pat', 
+              get_new_uptoken: false,  
+              container: 'container',             
+              max_file_size: '100mb',          
+              flash_swf_url: 'js/plupload/Moxie.swf',  
+              max_retries: 333333,                    
+              dragdrop: true,                    
+              drop_element: 'container',          
+              chunk_size: '0mb',                 
+              auto_start: true,
+              resize:{
+                crop:true,
+                quality:60,
+                preserve_headers:false
+              },                 
+              init: {
+                  'FilesAdded': function(up, files) {
+                      plupload.each(files, function(file) {
+                          // 文件添加进队列后，处理相关的事情
+                      });
+                  },
+                  'BeforeUpload': function(up, file) {
+                         // 每个文件上传前，处理相关的事情
+                  },
+                  'UploadProgress': function(up, file) {
+                         // 每个文件上传时，处理相关的事情
+                  },
+                  'FileUploaded': function(up, file, info) {
+                         // 每个文件上传成功后，处理相关的事情
+                         // 其中info是文件上传成功后，服务端返回的json，形式如：
+                         // {
+                         //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
+                         //    "key": "gogopher.jpg"
+                         //  }
+                         // 查看简单反馈
+                         var domain = up.getOption('domain');
+                         var res = JSON.parse(info);
+                         var sourceLink = yuming+'/' + res.key; //获取上传成功后的文件的Url
+                         $imgBox.append('<img class="sPhoto" src="http://'+sourceLink+'?imageMogr2/thumbnail/500x" alt="">');
+                         imgArr.push($imgBox.find(".sPhoto").last().attr("src"));
+                  },
+                  'Error': function(up, err, errTip) {
+                         //上传出错时，处理相关的事情
+                  },
+                  'UploadComplete': function() {
+                         //队列文件处理完毕后，处理相关的事情
+                  },
+                  'Key': function(up, file) {
+                      // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+                      // 该配置必须要在unique_names: false，save_key: false时才生效
+
+                      var key = "";
+                      // do something with key here
+                      return key
+                  }
+              }
+          });
+        }
+    });
+    
+
+    $('#onlineSub').on('click',function(){
+      var $onlineDes = $('#onlineDes').val();
+      var tagchoose = $deTags.find('span').hasClass('on');
+      if($onlineDes=="" || !tagchoose){
+        $('.onlineTips').html('<p>请选择科室并且填写表单内容</p>');
+        return false;
+      }else if($onlineDes!="" && tagchoose){
+          $.ajax({
+           type:'post',
+           contentType: "application/json; charset=utf-8",
+           dataType: "json",
+           url: onlineProUrl,
+           data:JSON.stringify({
+              "content":$onlineDes,
+              "department":depVal,
+              "images":imgArr
+           }),
+           success:function(data){
+            if(data.result.code==0){
+                //清空填写数据
+               $deTags.find('span').removeClass('on');
+               $('#onlineDes').val('');
+               $('#imgBox').html('');
+               $('#nowCon').text(0);
+               $('#totalCon').text(300);
+               location.href='home_page.html';
+            }
+             
+           }
+        });
+      }
+        //先验证
+       // if($onlineDes==""&&depVal==""&&imgArr==[]){
+       //  debugger;
+       //    alert('请填写表单')
+       //    return false;
+       // }
+        //提交在线问题
+    });
+  /*
+    window.compressImg=function(files){
+      var oFile= files[0].getNative();
+      var oReader = new FileReader();
+      oReader.onloadend = function(e){
+          lrz(oFile)
+          .then(function (rst) {
+              // 处理成功会执行
+              console.log(rst);
+              //uploader.start();
+              //file = rst.file;
+          })
+          .catch(function (err) {
+              // 处理失败会执行
+          })
+          .always(function () {
+              // 不管是成功失败，都会执行
+          }); 
+      };
+      oReader.readAsDataURL(oFile);
+    }
+  */
+
+});
+</script>
+</body>
+</html>

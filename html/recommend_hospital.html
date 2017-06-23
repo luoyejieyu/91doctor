@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>北京市儿童医院</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top" id="rec_hospital">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>北京儿童医院</span>
+</div>
+    <div class="container1 marTop5">
+        <!--轮播图-->
+        <div id="leftTabBox2" class="tabBox leftTabBox">
+            <div class="hd">
+                <ul>
+                    <li></li><li></li><li></li>
+                </ul>
+            </div>
+            <div class="bd">
+                <ul>
+                    <li><img src="../statics/img/3.jpg" data-id="" class="banne1"></li>
+                </ul>
+                <ul>
+                    <li><img src="../statics/img/1.jpg" data-id="" class="banne2"></li>
+                </ul>
+                <ul>
+                    <li><img src="../statics/img/1.jpg" data-id="" class="banne3"></li>
+                </ul>
+            </div>
+        </div>
+        <section>
+            <div id="hospital_info">
+
+            </div>
+        </section>
+        <footer>
+            <div class="recExp">
+                <p><span>推荐专家</span><span class="mor">更多 <img src="../statics/img/enter.png" alt=""></span></p>
+                <div id="leftTabBox" class="tabBox">
+                    <div class="bd">
+                        <ul id="hos_experts">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/touchSlide.1.1.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script>
+    (function(window,undefined){
+        var recHosid=localStorage.getItem('xyfId');
+        console.log(recHosid);
+        var insure_staus=true;
+        var hos_infor=true;
+        var banner='.banne';
+        TouchSlide({
+            slideCell:"#leftTabBox2",
+            autoPlay:'true',
+            effect:'leftLoop'
+        });
+        //    <!--跳转到医生列表-->
+        $('.mor').on('click',function(){
+            location.href='hospital_doctor.html';
+        });
+        //跳转到医生详情页
+        $('#hos_experts').on('click','dl',function(){
+            localStorage.setItem('doctorId',$(this).attr('data-id'));
+            location.href='doctorPage.html';
+        });
+
+        //点击展开多余的保险认证
+        $('#hospital_info').on('click','.certificate em',function(){
+            if(insure_staus){
+                insure_staus=false;
+                $('#hos_down b').html('收起');
+                $('#hos_down img').css('transform','rotate(-90deg)');
+                $('#insure,.inter_certifi').css({'height':'auto','white-space':'normal'})
+            }else{
+                insure_staus=true;
+                $('#hos_down b').html('展开');
+                $('#hos_down img').css('transform','rotate(90deg)');
+                $('#insure,.inter_certifi').css({'height':'2.3rem','white-space':'nowrap'})
+            }
+        });
+        //点击展开多余的医生荣誉和信息
+        $('#hospital_info').on('click','.introduce em',function(){
+            if(hos_infor){
+                hos_infor=false;
+                $('.introduce b').html('收起');
+                $('.introduce img').css('transform','rotate(-90deg)');
+                $('.hos_information,.hos_honor').css({'height':'auto','white-space':'normal'});
+            }else{
+                hos_infor=true;
+                $('.introduce b').html('展开');
+                $('.introduce img').css('transform','rotate(90deg)');
+                $('.inter_certifi').css('height','2.3rem');
+                $('.hos_information,.hos_honor').css({'height':'1.8rem','white-space':'nowrap'})
+            }
+        });
+
+
+        //       获取医院信息
+        function hospital_img(data){
+            for(var i=0;i<3;i++){
+                $(banner+(i+1)).attr('src',data[i])
+            }
+        }
+        function hospital_information(data){
+            $('#rec_hospital span').html(data.name);
+            $('title').html(data.name);
+            var html='';
+            html+='<div class="hospital_map">';
+            html+='<img src="../statics/img/address.png" alt="" >';
+            html+='<span class="address"><a href="map.html" class="clip_t">'+data.address+'</a></span>';
+            html+='<span class="line">|</span>';
+            html+='<span>';
+            html+=' <a href="tel:'+data.tel+'" mce_href="tel:'+data.tel+'" class="tel">打电话</a>';
+            html+=' <img src="../statics/img/phone.png" alt="">';
+            html+=' </span>';
+            html+='</div>';
+            html+='<ul class="certificate">';
+            html+='<em id="hos_down"> <b>展开 </b><img src="../statics/img/enter.png" alt=""></em>';
+            html+='<li class="hospital_type"><span>'+data.type+'</span><span>'+data.yibao+'</span></li>';
+            html+='<li class="inter_certifi">';
+            for(var i=0;i<data.identify.length;i++){
+                html+=' <img src="'+data.identify[i].icon+'" alt=""><span class="marLR">'+data.identify[i].name+'</span>';
+            }
+            html+=' </li>';
+            html+=' <li class="c-txt" id="insure">';
+            for(var i=0;i<data.medtype.length;i++){
+                html+=' <img src="'+data.medtype[i].icon+'" alt=""><span class="marLR">'+data.medtype[i].name+'</span>';
+            }
+            html+='</li>';
+            html+='</ul>';
+            /*医生简介*/
+            html+=' <div class="introduce">';
+            html+='<h3>医院简介 <em><b>展开</b><img src="../statics/img/enter.png" alt=""></em></h3>';
+            html+=' <dl>';
+            html+=' <dt>成立时间：</dt>';
+            html+='<dd>'+data.crdate+'</dd>';
+            html+=' </dl>';
+            html+=' <dl><dt>占地面积：</dt><dd>'+data.space+'</dd></dl>';
+            html+='<dl><dt>床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 位：</dt><dd>'+data.beds+'</dd></dl>';
+            html+='<dl><dt>特色科室：</dt><dd>'+data.departments+'</dd></dl>';
+            html+='<dl><dt>医护团队：</dt><dd class="hos_information">'+data.desc+'</dd></dl>';
+            html+='<dl><dt>重要荣誉：</dt>';
+            html+='<dd class="hos_honor">';
+            html+='2000-2015全国前十非公立医院 <br>';
+            html+='2000-2015全国前十非公立医院 <br>';
+            html+='</dd>';
+            html+='</dl>';
+            html+='</div>';
+            $('#hospital_info').append(html);
+        }
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'com/hospitals/'+recHosid+'?token='+localStorage.getItem('userToken'),
+            data:'',
+
+            success:function(data){
+                localStorage.setItem('hospital_name',data.info.name);
+                hospital_img(data.images.url);
+                hospital_information(data.info);
+                var add=new Object();
+                add.lat=data.info.latitude;//  data.info.latitude
+                add.long=data.info.longitude;//  data.info.longitude
+                var address=JSON.stringify(add);
+                localStorage.setItem('addre',address);
+            }
+        });
+
+
+        //获取医院推荐专家的信息
+        function hos_experts(data){
+            var html='';
+            for(var i=0;i<data.length;i++){
+                html+='<dl data-id="'+data[i].docId+'">';
+                html+='<dt><img src="'+data[i].image+'" alt=""></dt>';
+                html+='<dd>'+data[i].name+'</dd>';
+                html+='<dd>'+data[i].title+'</dd>';
+                html+=' </dl>';
+            }
+            $('#hos_experts').append(html);
+        }
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'pat/hospitals/'+recHosid+'/adexperts?token='+localStorage.getItem('userToken')+'&page=1&size=4',
+            data:'',
+            success:function(data){
+                hos_experts(data.docs);
+            }
+        });
+    })(window);
+</script>
+</body>
+</html>

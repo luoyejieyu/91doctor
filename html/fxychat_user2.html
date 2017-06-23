@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+  <title>徐毅飞</title>
+  <style type="text/css">
+  body{font-family: "微软雅黑";}
+  *{margin:0;padding:0;list-style: none;}
+  .clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
+  .clearfix:after { clear: both; }
+  .clearfix { zoom: 1; }
+  .chatCon{padding:10px 20px;min-height:300px;max-height:400px;overflow-x:hidden;overflow-y:scroll;background:#fff;}
+  .chatCon ul{margin-top:50px;}
+  .chatCon li{margin-bottom: 10px;}
+  .chatCon .lt{float:left;}
+  .chatCon .lt .facePic{float:left;margin-right: 10px;}
+  .chatCon .lt .commt{font-size:0.9rem;float:left;background:#57d1a8;padding:10px;color:#fff;border-radius: 3px;}
+  .chatCon .lt .commt .pic{max-width:100px;}
+  .chatCon .rt{float:right;}
+  .chatCon li{clear:both;}
+  .chatCon .rt .facePic{float:right;margin-left: 10px;}
+  .chatCon .rt .commt{font-size:0.9rem;float:left;background:#57d1a8;padding:10px;color:#fff;border-radius: 3px;}
+  .chatCon .rt .commt .pic{max-width:100px;}
+  .chatCon .lt .imgBg{background:none;}
+  .chatCon .rt .imgBg{background:none;}
+  #btnBox{clear:both;margin:30px;}
+  #btnBox .inp{margin:0 20px 15px 0;}
+  .geoPosition{width:100%;height:35px;position:fixed;background:#fff;}
+  .geoPosition .backBtn{position:absolute;top:0;left:10px;width:35px;height:35px;display: inline-block;background:url(../statics/img/reWhite.png) no-repeat;}
+  .geoPosition .nameDoc{font-size: 1.1rem;color:#333;text-align: center;height:35px;line-height: 35px;font-weight: normal;}
+  .geoPosition .perSign{position:absolute;top:0;right:10px;width:35px;height:35px;display: inline-block;background:url(../statics/img/perLogo.png) no-repeat;}
+  .facePic img{border-radius: 25px;}
+  .importArea .inp{height:20px;line-height: 30px;padding:5px 10px;border:1px solid #ccc;outline: none;}
+  .whiteBg h3{background:#57d1a8;color:#fff!important;}
+  .importArea .send{height:30px;color:#fff;padding:0 10px;border-radius: 5px;border:none;outline:none;background:#57d1a8;}
+  .uploadArea{position: relative;}
+  .uploadArea .sendPhoto{position:absolute;width:47px;height:47px;top:0;left:0;}
+  .uploadArea .upPic{position:absolute;width:47px;height:47px;opacity:0;top:0;left:0;}
+  .uploadArea p{font-size:0.8rem;position: absolute;top:15px;left:55px;color:#999;letter-spacing: 1px;}
+  </style>
+  <script src="../statics/js/common/jquery-1.7.2.min.js"></script>
+  <script src="http://cdn.ronghub.com/RongIMLib-2.2.4.min.js"></script> 
+  <script type="text/javascript" src="../statics/js/common/moxie.min.js"></script>
+  <script type="text/javascript" src="../statics/js/common/plupload.dev.js"></script>
+  <script type="text/javascript" src="../statics/js/common/qiniu.js"></script>
+  <script type="text/javascript" src="../statics/js/common/jweixin-1.0.0.js"></script>
+  <script type="text/javascript" src="../statics/js/common/RongEmoji-2.2.4.min.js"></script>
+  <script src="../statics/js/common/basic.js"></script>
+	<script type="text/javascript">
+
+	$(function(){
+//    RongIMLib.RongIMClient.init("sfci50a7c518i");
+//
+//    // RongIMLib.RongIMEmoji.init();
+//    //   //emoji
+//    //   var eArr=[];
+//
+//    //   var emojis = new Array();
+//    //   emojis[0]=RongIMLib.RongIMEmoji.emojis[0];
+//
+//    //   $.each(emojis,function(i,e){
+//    //     var epic='<span class="RongIMExpression_rinning" name="'+e.children[0].getAttribute("name")+'"><b class="RC_Expression" style="background-position: '+(-22*(i))+'px 0px;"></b></span>';
+//    //     eArr[e.children[0].getAttribute("name")] = epic;
+//    //     $('.emoji_div').append(epic);
+//    //   });
+//
+//    //   $('.emoji_div').on('click','.RongIMExpression_rinning',function(e){
+//    //     var oInp = $('.inp').val()+$(this).attr('name');
+//    //     $('.inp').val(oInp);
+//    //   // $('#content').append(tmpR);
+//    //   // $btnBox.find('.inp').val('');
+//
+//    //   });
+//
+//      var $btnBox = $('#btnBox'),
+//          $sendBtn = $btnBox.find('.send'),
+//          $upPic = $btnBox.find('.upPic');
+//     //文本
+//    $sendBtn.on('click',function(){
+//       var inp = $btnBox.find('.inp').val();
+//       if(inp==''){
+//          return;
+//        }
+//       var sendContent = inp.replace(/\[[\u4e00-\u9fa5]+\]/,function(emojiName){
+//        return eArr[emojiName] ;
+//      });
+//      var tmpR='<li class="rt">'+
+//                '<a href="#" class="facePic">'+
+//                  '<img src="http://placehold.it/40x40" alt="">'+
+//                '</a>'+
+//                '<div class="commt">'+sendContent+'</div>'+
+//              '</li>';
+//      $('#chatCon ul').append(tmpR);
+//      $btnBox.find('.inp').val('');
+//      var targetId = "fxy"; // 目标 Id
+//      var msg = new RongIMLib.TextMessage({'content':sendContent,'extra':'','user':targetId});
+//      sendMsg(msg,targetId);
+//    });
+//    //图片
+//    $('input[type=file]').change(function(){
+//      var that = $(this);
+//      if(!/image\/\w+/.test(that.type)){
+//          alert("请确保文件为图像类型");
+//          return false;
+//      }
+//    });
+//
+//
+//   // var emojis = RongIMLib.RongIMEmoji.emojis;
+//   //  for(var i=0;i<128;i++){
+//   //      $('.container').append(emojis[i].innerHTML)
+//   //  }
+//
+//  // 设置连接监听状态 （ status 标识当前连接状态 ）
+// // 连接状态监听器
+// RongIMClient.setConnectionStatusListener({
+//    onChanged: function (status) {
+//        switch (status) {
+//            case RongIMLib.ConnectionStatus.CONNECTED:
+//                console.log('链接成功');
+//                break;
+//            case RongIMLib.ConnectionStatus.CONNECTING:
+//                console.log('正在链接');
+//                break;
+//            case RongIMLib.ConnectionStatus.DISCONNECTED:
+//                console.log('断开连接');
+//                break;
+//            case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
+//                console.log('其他设备登录');
+//                break;
+//              case RongIMLib.ConnectionStatus.DOMAIN_INCORRECT:
+//                console.log('域名不正确');
+//                break;
+//            case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+//              console.log('网络不可用');
+//              break;
+//            }
+//    }});
+//
+//
+// // 消息监听器
+// RongIMClient.setOnReceiveMessageListener({
+//    // 接收到的消息
+//    onReceived: function (message) {
+//        // 判断消息类型
+//        switch(message.messageType){
+//            case RongIMClient.MessageType.TextMessage:
+//                // message.content.content => 消息内容
+//
+//                var contentView = message.content.content.replace(/\[[\u4e00-\u9fa5]+\]/,function(emojiName){
+//                  return eArr[emojiName] ;
+//                });
+//
+//
+//                console.log(message.content.user+" : "+message.content.content);
+//                  var tmpL='<li class="lt">'+
+//                            '<a href="#" class="facePic">'+
+//                              '<img src="http://placehold.it/40x40" alt="">'+
+//                            '</a>'+
+//                            '<div class="commt">'+ contentView +'</div>'+
+//                          '</li>';
+//                $('#chatCon ul').append(tmpL);
+//                break;
+//            case RongIMClient.MessageType.VoiceMessage:
+//                // 对声音进行预加载
+//                // message.content.content 格式为 AMR 格式的 base64 码
+//                break;
+//            case RongIMClient.MessageType.ImageMessage:
+//               // message.content.content => 图片缩略图 base64。
+//               // message.content.imageUri => 原图 URL。
+//                var tmpL='<li class="lt">'+
+//                          '<a href="#" class="facePic">'+
+//                            '<img src="http://placehold.it/40x40" alt="">'+
+//                          '</a>'+
+//                          '<div class="commt imgBg"><img class="imgSmall" src="'+message.content.content+'" alt=""></div>'+
+//                        '</li>';
+//               $('#chatCon ul').append(tmpL);
+//               DrawImage($('.imgSmall').last().get(0));
+//
+//               break;
+//            case RongIMClient.MessageType.DiscussionNotificationMessage:
+//               // message.content.extension => 讨论组中的人员。
+//               break;
+//            case RongIMClient.MessageType.LocationMessage:
+//               // message.content.latiude => 纬度。
+//               // message.content.longitude => 经度。
+//               // message.content.content => 位置图片 base64。
+//               break;
+//            case RongIMClient.MessageType.RichContentMessage:
+//               // message.content.content => 文本消息内容。
+//               // message.content.imageUri => 图片 base64。
+//               // message.content.url => 原图 URL。
+//               break;
+//            case RongIMClient.MessageType.InformationNotificationMessage:
+//                // do something...
+//               break;
+//            case RongIMClient.MessageType.ContactNotificationMessage:
+//                // do something...
+//               break;
+//            case RongIMClient.MessageType.ProfileNotificationMessage:
+//                // do something...
+//               break;
+//            case RongIMClient.MessageType.CommandNotificationMessage:
+//                // do something...
+//               break;
+//            case RongIMClient.MessageType.CommandMessage:
+//                // do something...
+//               break;
+//            case RongIMClient.MessageType.UnknownMessage:
+//                // do something...
+//               break;
+//            default:
+//                // do something...
+//        }
+//    }
+//});
+//
+////   var token;
+//// //融云聊天token获取
+////   var chatTokenUrl = window.YLZ.base+'com/token/rongcloud?token='+window.YLZ.token;
+////   $.ajax({
+////     type:"get",
+////     url:chatTokenUrl,
+////     data:{
+//
+////     },
+////     success:function(data){
+////       token = data.token;
+////      // console.log(typeof token);
+////       //console.log(token);
+////       //debugger;
+////     }
+////   });
+//
+//		var token = "UfjXlT9sWc84/dseDkO/fy5JAaZDxd+TN9DxR8QoOXAQKt5APtgACW3gozmC4uGY8p1eBwFSo3iPhSj/Ecr72A==";
+//
+//	  RongIMClient.connect(token, {
+//        onSuccess: function(userId) {
+//          console.log("Login successfully." + userId);
+//        },
+//        onTokenIncorrect: function() {
+//          console.log('token无效');
+//        },
+//        onError:function(errorCode){
+//              var info = '';
+//              switch (errorCode) {
+//                case RongIMLib.ErrorCode.TIMEOUT:
+//                  info = '超时';
+//                  break;
+//                case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+//                  info = '未知错误';
+//                  break;
+//                case RongIMLib.ErrorCode.UNACCEPTABLE_PaROTOCOL_VERSION:
+//                  info = '不可接受的协议版本';
+//                  break;
+//                case RongIMLib.ErrorCode.IDENTIFIER_REJECTED:
+//                  info = 'appkey不正确';
+//                  break;
+//                case RongIMLib.ErrorCode.SERVER_UNAVAILABLE:
+//                  info = '服务器不可用';
+//                  break;
+//              }
+//              console.log(errorCode);
+//            }
+//    });
+//    //getConversationList示例
+//
+////    RongIMClient.getInstance().getConversationList({
+////        onSuccess: function(list) {
+////            alert(4)
+////            console.log(list);
+////        },
+////        onError: function(error) {
+////            // do something...
+////        }
+////    },null);
+//     function sendMsg(msg,targetId){
+//       var conversationtype = RongIMLib.ConversationType.PRIVATE; // 私聊,其他会话选择相应的消息类型即可。
+//       RongIMClient.getInstance().sendMessage(conversationtype, targetId, msg, {
+//                onSuccess: function (message) {
+//                    //message 为发送的消息对象并且包含服务器返回的消息唯一Id和发送消息时间戳
+//                    console.log("Send successfully");
+//                },
+//                onError: function (errorCode,message) {
+//                    var info = '';
+//                    switch (errorCode) {
+//                        case RongIMLib.ErrorCode.TIMEOUT:
+//                            info = '超时';
+//                            break;
+//                        case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+//                            info = '未知错误';
+//                            break;
+//                        case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+//                            info = '在黑名单中，无法向对方发送消息';
+//                            break;
+//                        case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+//                            info = '不在讨论组中';
+//                            break;
+//                        case RongIMLib.ErrorCode.NOT_IN_GROUP:
+//                            info = '不在群组中';
+//                            break;
+//                        case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+//                            info = '不在聊天室中';
+//                            break;
+//                        default :
+//                            info = x;
+//                            break;
+//                    }
+//                    console.log('发送失败:' + info);
+//                }
+//            }
+//        );
+//
+//
+//       //getHistoryMessages
+//       RongIMClient.getInstance().getHistoryMessages(RongIMLib.ConversationType.PRIVATE, 'targetId', null, 20, {
+//            onSuccess: function(list, hasMsg) {
+//              // hasMsg为boolean值，如果为true则表示还有剩余历史消息可拉取，为false的话表示没有剩余历史消息可供拉取。
+//                 // list 为拉取到的历史消息列表
+//            },
+//            onError: function(error) {
+//                // APP未开启消息漫游或处理异常
+//                     // throw new ERROR ......
+//            }
+//          });
+//
+//      console.log(targetId);
+//    };
+//
+//
+//       function DrawImage(ImgD){
+//        var image = new Image();
+//            image.src = ImgD.src;
+//        if(image.width>0 && image.height>0){
+//            if(image.width/image.height>= 120/90){
+//              if(image.width>120){
+//                ImgD.width=120;
+//                ImgD.height=(image.height*120)/image.width;
+//              }else{
+//                ImgD.width=image.width;
+//                ImgD.height=image.height;
+//              }
+//              ImgD.alt=image.width+"×"+image.height;
+//            }
+//          else{
+//              if(image.height>90){
+//                ImgD.height=90;
+//                ImgD.width=(image.width*90)/image.height;
+//              }else{
+//                ImgD.width=image.width;
+//                ImgD.height=image.height;
+//              }
+//              ImgD.alt=image.width+"×"+image.height;
+//            }
+//          }
+//    };
+//     //上传token获取
+//        console.log(window.YLZ.token)
+    var qnUpTokenUrl = window.YLZ.base+'com/token/qiniu/uptoken?bucket=ylzyyy&token='+window.YLZ.token;
+    $.ajax({
+      type:'get',
+      url:qnUpTokenUrl,
+      data:{
+
+      },
+      success:function(data){
+         upPicToken = data.token;
+         yuming = data.domain;
+         var uploader = Qiniu.uploader({
+                  runtimes: 'html5,flash,html4',     
+                  browse_button: 'portrait',        
+                  // uptoken : 'JGwgjvdzdhq-SMx-P6vjeoRx1c5HmVJiUv8Cn2G0:pGjRnSnr8K_nShbPzOvqfyN5tyo=:eyJzY29wZSI6InN0b3J0ZSIsImRlYWRsaW5lIjoxNDc4NDU0OTQxfQ==', 
+                  uptoken:upPicToken,
+                  unique_names: true,              
+                  domain: 'ylzyyy', 
+                  get_new_uptoken: false,              
+                  container: 'btnBox',            
+                  max_file_size: '100mb',          
+                  flash_swf_url: 'js/plupload/Moxie.swf', 
+                  max_retries: 3,                    
+                  dragdrop: true,                    
+                  drop_element: 'btnBox',          
+                  chunk_size: '4mb',                 
+                  auto_start: true,      
+                  init: {
+                      'FilesAdded': function(up, files) {
+                          plupload.each(files, function(file) {
+                              // 文件添加进队列后，处理相关的事情
+
+                          });
+                      },
+                      'BeforeUpload': function(up, file) {
+                             // 每个文件上传前，处理相关的事情
+                             
+                      },
+                      'UploadProgress': function(up, file) {
+                             // 每个文件上传时，处理相关的事情
+                             
+                      },
+                      'FileUploaded': function(up, file, info) {
+                             // 每个文件上传成功后，处理相关的事情
+                             // 其中info是文件上传成功后，服务端返回的json，形式如：
+                             // {
+                             //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
+                             //    "key": "gogopher.jpg"
+                             //  }
+                             // 查看简单反馈
+                         var domain = 'http://ofdt70qlz.bkt.clouddn.com/';
+                         var res = JSON.parse(info);
+                         var imageUri = domain + res.key;
+                         var oFile= file.getNative(); 
+                         var oReader = new FileReader();  
+                        oReader.onloadend = function(e) { 
+                            var base64Str = e.target.result;  
+                            var msg = new RongIMLib.ImageMessage({'content':base64Str,'imageUri':imageUri});
+                            var targetId = "fxy"; // 目标 Id
+                            var tmpR='<li class="rt">'+
+                            '<a href="#" class="facePic">'+
+                              '<img src="http://placehold.it/40x40" alt="">'+
+                            '</a>'+
+                            '<div class="commt imgBg"><img class="imgSmall" src="'+base64Str+'" alt=""></div>'+
+                          '</li>';
+                            $('#chatCon ul').append(tmpR);
+//                            DrawImage($('.imgSmall').last().get(0));
+//                            sendMsg(msg,targetId);
+                                      
+                        };  
+                        oReader.readAsDataURL(oFile); 
+                             
+                      },
+                      'Error': function(up, err, errTip) {
+                             //上传出错时，处理相关的事情
+                      },
+                      'UploadComplete': function() {
+                             //队列文件处理完毕后，处理相关的事情
+                      },
+                      'Key': function(up, file) {
+                          // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+                          // 该配置必须要在unique_names: false，save_key: false时才生效
+
+                          var key = "";
+                          // do something with key here
+                          return key
+                      }
+                  }
+            });
+        }
+    });
+
+   //点击图片放大
+
+	});
+	</script>
+</head>
+<body>
+  <header class="geoPosition whiteBg">
+    <a class="backBtn" href="javascript:void(0)"></a>
+    <h3 class="nameDoc">王明</h3>
+    <em class="perSign"></em>
+  </header>
+  <div id="chatCon" class="chatCon clearfix">
+    <ul class="clearfix">
+       <!--<li class="lt">-->
+           <!--<em class="sanjiao"></em>-->
+        <!--<a href="#">-->
+          <!--<img src="http://placehold.it/50x50" alt="">-->
+        <!--</a>-->
+        <!--<div class="commt">-->
+          <!--你好，在吗？-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li class="rt">-->
+        <!--<a href="#">-->
+          <!--<img src="http://placehold.it/50x50" alt="">-->
+        <!--</a>-->
+        <!--<div class="commt">-->
+          <!--在的呢~-->
+        <!--</div>-->
+      <!--</li>-->
+    </ul>
+  </div>
+  <div id="btnBox" class="importArea">
+    <input type="text" class="inp"><input type="button" value="发送" class="send">
+    <div class="uploadArea">
+      <input type="file" id="portrait" class="upPic" capture="camera">
+      <img class="sendPhoto" src="../statics/img/sendPic.png">
+      <p>发送图片使用</p>
+    </div>
+  </div>
+   <div class="emoji_div">
+     
+   </div>
+</body>
+</html>

@@ -1,0 +1,357 @@
+/* homepage me */
+.my_bac{
+  font-size: $f_13;
+  .myName{
+    width:134px;
+    margin: auto;
+    text-align: center;
+    padding-top: 12%;
+    dd{
+      color: white;
+      width: 100%;
+      height: 2rem;
+    }
+    img{
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+    }
+  }
+  .my_right{
+    color: $c_w;
+    @extend .clearfix;
+    img{
+      width: $w24;
+      height: $w24;
+    }
+    dl{
+      width: 33%;
+      float: left;
+      text-align: center;
+      margin:13% 0 1rem 0 ;
+    }
+  }
+}
+.person{
+  font-size: $f_13;
+  margin-bottom: 5rem;
+  li{
+    padding: 1rem;
+    border-bottom: 1px solid $c_bg;
+  }
+  em img{
+    width: 2.4rem;
+  }
+  span img{
+    float: right;
+    width: 0.7rem;
+    margin: 0.7rem;
+    margin-top: 1.1rem;
+  }
+  a{
+    position: relative;
+    top: -0.7rem;
+    left: 1rem;
+  }
+  li:last-child{
+    border-bottom: none;
+  }
+}
+#name{font-size: 1.5rem}
+/* my enquiry */
+.my_enquiry{
+  color: #525252;
+  padding: 1rem;
+  font-size: $f_14;
+  background-color: white;
+  margin-bottom: 3rem;
+  .staus{
+    float: $f_r;
+    color: #ABABAB;
+    margin-right: 1.4rem;
+  }
+  dl{
+    @extend .clearfix;
+    line-height: 3rem;
+    color: $c_b;
+  }
+  dt{
+    float: left;
+    margin-right: 2rem;
+  }
+  img{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+  }
+  p{
+    text-indent: 2rem;
+    padding: 0.5rem 1rem 1rem 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #E7E7E7;
+  }
+  a{
+    float: right;
+    padding: 0.3rem 1rem;
+    border: 1px solid $c_g;
+    margin: -0.3rem 1rem;
+    color: $c_g;
+  }
+}
+#diagnoseList{
+  background-color: #F4F4F4;
+}
+/* my strength */
+.myG{
+  font-size: $f_14;
+  color: black;
+  dl{
+    @extend .clearfix;
+    margin: 10px;
+    padding: 10px 10px 10px 20px;
+    border-radius: 9px;
+    border-bottom: 1px solid $c_bg;
+    dt{
+      float: right;
+      padding: 3px 6px;
+      background-color: #57D1A8;
+      color: white;
+      border-radius: 6px;
+      font-size: 1.3rem;
+    }
+    dd{
+      max-width: 72%;
+    }
+    dd:last-child{
+      color: #AEAEAE;
+      font-weight: 500;
+      font-size: 1.3rem;
+    }
+  }
+}
+.footer{
+  text-align: center;
+  color: $c_b;
+  font-size: $f_13;
+  a{
+    display: inline-block;
+    margin-top: 1.5rem;
+  }
+  span{
+    img{
+      width: 1.5rem;
+    }
+  }
+}
+/* my case */
+.my_case{
+  padding: 1rem;
+  h2{
+    padding: 1rem;
+    font-size: $f_14;
+    color: $c_b;
+    text-align: center ;
+  }
+  li{
+    font-size: $f_13;
+    border-bottom: 1px solid $c_bg;
+    line-height: 4rem;
+  }
+  span{
+    float: $f_r;
+  }
+}
+/* person set */
+.perSon{
+  margin-top: 5.6rem;
+  .mui-input-group{
+    background-color: #EFEFF4;
+  }
+  img{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    float: $f_r;
+    margin: 4px 32px
+  }
+  .radio {
+    clear: none;
+  }
+  .radio{
+    margin-top: 9px;
+    .mui-input-row{
+      clear: none;
+    }
+  }
+  .mui-radio input[type='radio']:before
+  {
+    font-family: Muiicons;
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1;
+    top: 14px;
+    text-decoration: none;
+    position: absolute;
+    color: #aaa;
+    border-radius: 0;
+    background: none;
+    -webkit-font-smoothing: antialiased;
+    text-indent: 0;
+  }
+  .mui-radio{
+    position: relative;
+    left: 29%;
+    top: 1px;
+    label{
+      margin-right:5px;
+    }
+  }
+  .mui-input-group .mui-input-row {
+    height: 50px;
+    background-color: white;
+    label{
+      padding: 19px 15px;
+    }
+    input{
+      text-indent: 6rem;
+    }
+  }
+  .headPic{
+    margin-top: 20px;
+  }
+  input{
+    position: absolute;
+    top: 9px;
+    left:40%;
+    text-align: center;
+  }
+}
+#pet_name{
+  text-indent: 9rem;
+}
+#file_head{
+  width: 177px;
+  position: absolute;
+  height: 49px;
+  top: 0;
+  opacity: 0;
+}
+#edit{
+  position: absolute;
+  right: 2rem;
+}
+#person_save{
+  color: white;
+  font-size: $f_14;
+  height: 44px;
+  background-color: $c_g;
+  margin-left: 10%;
+  border-radius: 20px;
+}
+/*添加地址*/
+#add_address{
+  button{
+    position: absolute;
+    right: 4%;
+    width: 41%;
+    opacity: 0;
+  }
+  div{
+    float: right;
+   margin: 1rem 1rem 0 0;
+  }
+}
+.eA{
+  h3{
+    color: black;
+    font-size: 14px;
+    margin: 2rem;
+  }
+  textarea{
+    width: 90%;
+    border: 1px solid #E6E6E6;
+    margin-left: 5%;
+    resize: none;
+    font-size: 14px;
+  }
+}
+/* problem feedback */
+.fankui{
+  #proArea{
+    position: relative;
+  }
+  h3{
+    padding: 1rem;
+  }
+  p{
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    width: 100%;
+    span{
+      border: 1px solid $c_f;
+      color: $c_f;
+      padding: 4px;
+      border-radius: 6px;
+      margin-right: 1.5rem;
+      display: inline-block;
+      max-width: 80%;
+      height: 2.6rem;
+      overflow: hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+    }
+    .on{
+      color:#fff;
+      background:#999;
+    }
+  }
+  textarea{
+    width: 100%;
+    border: none;
+    resize: none;
+  }
+  .add_photo{
+    padding: 1rem;
+  }
+}
+.reminder{
+  background-color: #fff;
+  margin-top: 6rem;
+  line-height: 2rem;
+  padding: 1rem;
+
+  p{
+    color: #9BBFED;
+  }
+  h3{
+    color: $c_f;
+  }
+}
+.feedBack{overflow: hidden}
+/* about us */
+.aU{
+  img{
+    width:44%;
+    height: 12rem;
+    margin-top: 36%;
+  }
+  h3{
+    text-align: center;
+    margin: 1rem 0 3rem 0;
+    font-size: $f_16;
+  }
+  p{
+    color: #848484;
+    margin: auto;
+    width: 86%;
+    text-align: center;
+    line-height: 3rem;
+    font-size: $f_14;
+  }
+}
+/*message detail*/
+#msgDetailCon{
+  /*background-color:#F4F4F4;*/
+  padding-top: 6rem;
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>申请理赔</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<section class="formSub marTop5">
+  <div class="top">
+      <em>
+          <img src="../statics/img/enter.png" alt="">
+      </em>
+      <span>申请理赔</span>
+  </div>
+  <div class="errTips "></div>
+  <ul class="pS ">
+    <li>
+        <span>姓名</span><input type="text" id="apuser">
+    </li>
+    <li>
+        <span>电话</span><input type="text" id="apTel">
+    </li>
+    <li>
+        <span>地址</span><input type="text" id="apAddress">
+    </li>
+  </ul>
+  <div class="eA">
+    <h3>理赔原因</h3>
+    <textarea name="" id="apReason" cols="15" rows="5"></textarea>
+  </div>
+</section>
+<input type="button" id="conApply" class="btn" value="确认申请">
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+
+<script type="text/javascript">
+$(function(){
+    var apClaimsUrl = window.YLZ.base+'pat/insurance/claims?token='+localStorage.getItem("userToken1");
+    $('.formSub').on('focus','input',function(){
+      $('.errTips').text('');
+     });
+    $('#conApply').on('click',function(){
+        //先验证再提交
+       var apuser = $('#apuser').val(),
+           apTel = $('#apTel').val(),
+           apAddress = $('#apAddress').val(),
+           apReason = $('#apReason').val(),
+           lpId = localStorage.getItem('lpid'),
+           reg = /^([0]\d{2,3}\-)?\d{7,8}$|(1[3-8]\d{9})/;
+        if(apuser=='' || apTel=='' || apAddress=='' || apReason==''){
+          $('.errTips').text('请将信息填写完整');
+          return false;
+        }
+        if(apuser==''){
+          $('.errTips').text('姓名不能为空，请重新输入');
+          return false;
+        }else if(YLZ.len(apuser)<2 || YLZ.len(apuser)>30){
+          $('.errTips').text('姓名需在2~30个字之间');
+          return false;
+        }else if(!/^[a-zA-Z0-9\u4e00-\u9fa5_]+$/g.test(apuser)){
+          $('.errTips').text('姓名只能输入中英文、数字或者“_”');
+          return false;
+        }
+        if(apTel==''){
+          $('.errTips').text('电话不能为空，请重新输入');
+          return false;
+        }else if(!reg.test(apTel)){
+          $('.errTips').text('手机或电话号码有误，请仔细输入');
+          return false;
+        }
+        if(apAddress==''){
+          $('.errTips').text('地址不能为空，请重新输入');
+          return false;
+        }else if(YLZ.len(apAddress)<2 || YLZ.len(apAddress)>30){
+          $('.errTips').text('地址需在2~30个字之间');
+          return false;
+        }else if(!/^[a-zA-Z0-9\u4e00-\u9fa5_]+$/g.test(apAddress)){
+          $('.errTips').text('地址只能输入中英文、数字或者“_”');
+          return false;
+        }
+        if(apReason==''){
+           $('.errTips').text('理赔原因不能为空');
+           return false;
+        }
+        //申请理赔
+        $.ajax({
+               type:'post',
+               url: apClaimsUrl,
+               contentType: "application/json; charset=utf-8",
+               dataType: "json", 
+               data:JSON.stringify({
+                  "name":apuser,
+                  "phone":apTel,
+                  "id":lpId,
+                  "address":apAddress,
+                  "reason":apReason
+               }),
+               success:function(data){
+                  if(data.result.code==0){
+                    location.href="insure_detail.html"
+                  }
+               }
+            });
+        });                  
+});
+</script>
+</body>
+</html>

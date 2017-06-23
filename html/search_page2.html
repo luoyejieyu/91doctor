@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>相关医生医院</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body class="background">
+<div class="search" id="search_result">
+    <em><img src="../statics/img/enter.png" alt=""></em>
+    <input type="text" placeholder="搜索医院、医生" autofocus="autofocus"/>
+    <span><img src="../statics/img/searchLogo.png" alt=""></span>
+    <strong id="search_page">搜索</strong>
+</div>
+<div class="hL" id="search_hospital">
+    <h2 class="relative">相关医院<img src="../statics/img/enter.png" alt=""> <a href="hospitalList.html"></a></h2>
+</div>
+<div class="relative_doc">
+    <h2 class="relative">相关医生<img src="../statics/img/enter.png" alt=""> <a href="doctorList.html"></a></h2>
+</div>
+<div class="expert_team">
+    <h2 class="relative">相关团队<img src="../statics/img/enter.png" alt="" class="team_img"> <a href="expertTeam_list.html"></a></h2>
+    <div id="expert_team">
+
+    </div>
+</div>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/xyfpublic/xyfpublic.js"></script>
+<script>
+    (function(window,undefined){
+//        var userToken='968bc8dbdc22422fb5e6f6f77a5fb8422200000000c3e38142c4d4d269e7bed90941fd6ef';
+        var userToken=localStorage.getItem('userToken');
+        var searchValue=localStorage.getItem('searchvalue');
+        var userId=localStorage.getItem('userId')
+        $('#search_result input').val(searchValue);
+        $('#search_page').on('click',function(){
+            localStorage.setItem('searchvalue',$('#search_result input').val());
+            location.reload();
+            search_result(searchValue);
+        });
+        search_result(searchValue);
+        function search_result(searchValue){
+            //        获取相关医院的列表
+            function relativeHos(data){
+                for(var i=0;i<data.length;i++){
+                    var html='';
+                    html+='<dl data-id="'+data[i].id+'">';
+                    if(data[i].image==''||data[i].image==null){
+                        html+='<dt><img src="../statics/img/logo.png" alt=""></dt>';
+                    }else{
+                        html+='<dt><img src="'+data[i].image+'" alt=""></dt>';
+                    }
+                    html+='<dd><h3>'+data[i].name+'</h3></dd>';
+                    html+='<dd>';
+                    html+='<span>'+data[i].medType+'</span>';
+                    html+='<span>'+data[i].type+'</span>';
+                    html+='</dd>';
+                    html+='</dl>';
+                    $('#search_hospital').append(html)
+                }
+            }
+            $.ajax({
+                type:'get',
+                url:window.YLZ.base+'pat/hospitals?searchkey='+searchValue+'&token='+userToken+'&page=1&size=2',
+                data:'',
+                success:function(data){
+                    console.log(data);
+                    $('.hL .relative a').html(data.count+'条');
+                    if(data.count==0){
+                        $('#search_hospital').append('<h1 class="no_relative" ">没有找到相关医院</h1>')
+                    }else{
+                        relativeHos(data.hospitals)
+                    }
+                }
+            });
+//        获取相关医生的列表
+            function doctorList(data){
+                for(var i=0;i<data.length;i++){
+                    var html='';
+                    var dataCircle=data[i];
+//                    console.log(dataCircle)
+                    html+='<dl class="dL" data-id="'+data[i].docId+'">';
+                    if(data[i].image==''||data[i].image==null){
+                        html+=' <dt><img src="../statics/img/1.jpg" alt=""></dt>';
+                    }else{
+                        html+=' <dt><img src="'+data[i].image+'" alt=""></dt>';
+                    }
+                    html+='<dd><strong>'+data[i].name+'</strong>&nbsp;&nbsp;';
+                    if(data[i].title!=null&&data[i].title!=''){
+                        html+='<span>'+data[i].title+'</span>&nbsp;&nbsp;';
+                    }
+                    html+='<span>'+data[i].department+'</span>&nbsp;&nbsp;';
+                    if(data[i].educationTitle!=''&&data[i].educationTitle!=null){
+                        html+= '<span>'+data[i].educationTitle+'</span>'
+                    }
+                    html+='<p class="hospitalName">'+data[i].hospital+'</p>';
+                    html+=' </dd>';
+                    html+=' <dd>';
+                    var html2=window.cloudFunction.addStar(dataCircle,html);
+                    html2+='<span>问诊量'+data[i].askCount+'</span>';
+                    html2+='</dd>';
+                    html2+='<dd>';
+                    html2+='<em>擅长:</em>&nbsp;&nbsp;';
+                    html2+='<span>'+data[i].good+'</span>&nbsp;&nbsp;';
+                    $('.relative_doc').append(html2)
+                }
+            }
+            $.ajax({
+                method:'get',
+                url:window.YLZ.base+'pat/docs?searchkey='+searchValue+'&token='+userToken+'&page=1&size=2',
+                data:'',
+                success:function(data){
+                    console.log(data);
+                    $('.relative_doc .relative a').html(data.count+'条');
+                    if(data.count==0){
+                        $('.relative_doc').append('<h1 class="no_relative">没有找到相关医生</h1>')
+                    }else{
+                        doctorList(data.docs);
+                    }
+                }
+            });
+            //获取相关团队的列表
+            $.ajax({
+                type:'get',
+                url:window.YLZ.base+'pat/groups?searchkey='+searchValue+'&token='+userToken+'&page=1&size=2',
+                success:function(data){
+                    if(data.count==0){
+                        $('#expert_team').html('<h1 class="no_relative">没有找到相关团队</h1>');
+                        $('.expert_team .relative a').html(0+'条')
+                    }else{
+                        cloudFunction.addTeam(data.groups);
+                        $('.expert_team .relative a').html(data.count+'条')
+                    }
+                }
+            })
+        }
+        //跳转到团队聊天
+        $('#expert_team').on('click','.free_enquiry',function(event){
+            event.stopPropagation();
+            var teamId=$(this).attr('data-id');
+            $.ajax({
+                type:'post',
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                data:JSON.stringify({
+                    'patId':userId,
+                    'groupId':teamId
+                }),
+                url:window.YLZ.base+'com/tempgroups?token='+userToken,
+                success:function(data){
+                    localStorage.setItem('doctorTeamId',data.groupId);
+                    location.href='flock_chat.html'
+                }
+            })
+        });
+        //相关团队主页的跳转
+        $('#expert_team').on('click','dl',function(){
+            localStorage.setItem('teamId',$(this).attr('data-id'));
+            location.href='team_page.html';
+        })
+    })(window);
+
+</script>
+</html>

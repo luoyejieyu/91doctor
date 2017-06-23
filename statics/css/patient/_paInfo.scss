@@ -1,0 +1,573 @@
+/* infomation detail */
+.mD{
+  h3{
+    text-align: center;
+    font-size: 14px;
+    margin: 1.5rem 0 0 0;
+  }
+  .m_content{
+    background-color: white;
+    margin: 5% 5% 0 5%;
+    padding: 5%;
+    border-radius: 1.5rem;
+    h2{
+      font-size: $f_14;
+      color: #676767;
+      margin-bottom: 1rem;
+    }
+    p{
+      font-size: 12px;
+      color: #C8C8C8;
+      margin: 0.5rem 0 0.7rem 0;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid $c_bg;
+    }
+    a{
+      color: $c_f;
+      font-size: $f_13;
+      img{
+        float: $f_r;
+        width: 0.7rem;
+      }
+    }
+  }
+}
+/* insurance detail */
+.iD{
+  font-size: $f_14;
+  margin: 5.5rem 1.5rem 0 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $c_g;
+  dt{
+    float: right;
+    padding: 3px 6px;
+    background-color: #57D1A8;
+    color: white;
+    border-radius: 6px;
+    font-size: 1.3rem;
+    img{
+      width: 7rem;
+      height: 7rem;
+      border-radius: 50%;
+    }
+  }
+  dd{
+    img{
+      width: 2rem;
+      height: 2rem;
+    }
+    p{
+      font-size:$f_12;
+    }
+    span{
+      color: $c_b;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+  }
+}
+.iD_info{
+  padding: 0 1.5rem;
+  font-size: $f_13;
+  line-height: 2.8rem;
+  span{
+    margin-right: 3rem;
+  }
+  .sure{
+    color: $c_g;
+    margin-left: -0.6rem;
+  }
+}
+.share{
+  @extend .clearfix;
+  text-align: center;
+  width: 60%;
+  margin: auto;
+  margin-top: 6rem;
+  img{
+    width: 50%;
+    height: 4rem;
+  }
+  dd{
+    line-height: 2rem;
+    font-size:$f_13;
+  }
+  dl{
+    float: $f_l;
+    width: 30%;
+  }
+  dl:first-child{
+    margin-right: 37%;
+  }
+}
+/* online answer */
+.oS{
+  padding: 1.5rem;
+  h3{
+    font-size: $f_13;
+    color: $c_b;
+  }
+  p span{
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid $c_f;
+    border-radius: 0.6rem;
+    margin: 1rem 0 1rem  0.8%;
+    width: 15%;
+    text-align: center;
+  }
+  .num{
+    float: right;
+    position: relative;
+    top: -3rem;
+    right: 2rem;
+    font-size: 13px;
+  }
+  .add_photo{
+    @extend .clearfix;
+    margin-top: 0;
+    img{
+      width: 60px;
+    }
+    span{
+      font-size: $f_12;
+      float: right;
+      margin-right: 16%;
+    }
+  }
+}
+
+.feedPic{
+  span{
+    width:100%;
+    display: block;
+    img{
+      /*float:left;*/
+      width: 68px;
+      height: 68px;
+      margin-right: 1%;
+    }
+  }
+  .add_picture{
+     width:68px;
+    float: left;
+   /* display: inline-block;
+    position: relative;
+    width: 68px;
+    height: 68px;
+    float: left;
+    margin-bottom: 1.5rem;*/
+    .add_photo{
+      width: 68px;
+      height: 68px;
+      display: inline-block;
+      background:url(../img/add_photo.png) no-repeat;
+      background-size: contain;
+    }
+  }
+  .picTips{
+    width:60%;
+    float: left;
+    color:#999;
+    margin:15px 0 0 20px;
+  }
+}
+.picOnline{
+  span{
+    width:100%;
+    display: block;
+    img{
+      /*float:left;*/
+      width:68px;
+      height:68px;
+      margin-right: 1%;
+    }
+  }
+  .add_picture{
+    width:68px;
+    float: left;
+  /*  width:68px;
+    height:68px;
+    display: inline-block;*/
+   /* position: relative;
+    float: left;*/
+    .add_photo{
+      width: 68px;
+      height: 68px;
+      display: inline-block;
+      background:url(../img/add_photo.png) no-repeat;
+      background-size: contain;
+    }
+  }
+  .picTips{
+    width:60%;
+    float: left;
+    margin:30px 0 0 20px;
+  }
+}
+#totalCon{
+  color: #ce3131;
+}
+/* question list */
+.aL{
+  color: $c_b;
+  font-size: $f_13;
+  li{
+    @extend .clearfix;
+    background-color: $c_w;
+    padding: 1rem;
+    margin: 1rem 0;
+    .look{
+      float: right;
+      padding: 0.4rem 1.2rem;
+      color: $c_w;
+      border-radius: 6px;
+      background-color: $c_blu;
+      text-align: center;
+    }
+    .noSolve{
+      @extend .look;
+      color: $c_r;
+      font-weight: bold;
+    }
+    h3{
+      border-bottom: 1px solid $c_f;
+      padding: 0 1rem 1.5rem 1rem;
+      margin-bottom: 1rem;
+      strong{
+        position: $p_r;
+        top: 0.6rem;
+      }
+    }
+    span{
+      margin-right: 2rem;
+    }
+  }
+}
+/* question list */
+.aD{
+  font-size:$f_14;
+  color: $c_b;
+  padding: 1.5rem;
+  p:first-child{
+    text-align: center;
+    span{
+      margin-right: 1rem;
+    }
+  }
+  img{
+    width: 30%;
+    height: 10rem;
+    margin-right: 2%;
+  }
+}
+.ask_detail{
+  text-indent: 20px;
+  margin-bottom: 3rem;
+}
+/* chat page */
+.chat_top{
+  font-size: $f_13;
+  background-color: $c_w;
+  padding-bottom: 1rem;
+  dl{
+    width: 50%;
+    text-align: center;
+    margin: auto;
+    padding-top: 0.6rem;
+  }
+  img:last-child{
+    float: right;
+    margin-top: -2.5rem;
+    width: 2.5rem;
+    margin-right: 1rem;
+  }
+}
+.chat_bottom{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem;
+  background-color: $c_w;
+  input{
+    height: 2rem;
+  }
+  input:first-child{
+    width: 80%;
+    margin-right: 1rem;
+  }
+}
+/*information style*/
+.information{
+  font-size: $f_13;
+  a{
+    font-size:1.5rem;
+    color: #686868;
+  }
+  img{
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    margin: 3px 1.3rem 0  0;
+  }
+  dl{
+    position: relative;
+    border-bottom: 1px solid $c_bg;
+    padding: 1rem;
+    line-height: 2.4rem;
+    height:85px;
+    dt{
+      float: $f_l;
+      width:25%;
+    }
+    dd{
+      float: left;
+      width:70%;
+      margin-top: 2.3rem;
+    }
+  }
+  span{
+    position: absolute;
+    right:30px;
+    color: #A2A2A2;
+  }
+  .text{
+    text-overflow: ellipsis;
+    height: 26px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+/* 91 select insurance */
+.se_in{
+  width: 90%;
+  background-color: white;
+  margin: 0 5% 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: $f_14;
+}
+.select_insure{
+  margin-top: 6rem;
+}
+/* profile details and chat */
+.inquiryDetail{
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  li{
+    margin-bottom: 2rem;
+  }
+}
+.out{
+  position:relative;
+  max-width: 65%;
+  width:auto;
+  height:auto;
+  background:#F8C301;
+  border-radius:5px; 
+  color: white;
+  word-break: break-all;
+  font-size: 14px;
+  padding: 5px;
+  top: 8px;
+  .arrow{
+    position:absolute;
+    top:5px; 
+    width:0;
+    height:0;
+    font-size:0;
+    border:solid 8px;
+  }
+}
+.photo_img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.out_right{
+  @extend .out;
+  background-color: $c_g;
+  float: right;
+  margin-right: 1.5rem;
+  .arrow{
+    border-color:white white white $c_g;
+    z-index: -1;
+    right: -15px;
+  }
+}
+.out_left{
+  @extend .out;
+  background-color: gray;
+  float: left;
+  margin-left: 1.5rem;
+  .arrow{
+    border-color:white gray white white ;
+    left: -15px;
+    z-index: -1;
+  }
+}
+.img_right img{
+  @extend .clearfix;
+  @extend .photo_img;
+  float: $f_r;
+}
+.img_left img{
+  @extend .photo_img;
+  @extend .clearfix;
+  float: $f_l;
+}
+.success{
+  font-size: $f_14;
+  width: 30%;
+  padding: 0.6rem;
+  background-color: gray;
+  border-radius: 0.7rem;
+  text-align: center;
+  margin: auto
+}
+.suc_enquiry{
+  margin-bottom: 5rem;
+}
+.inquery_start{
+  margin-top: 5.2rem;
+  margin-bottom: -3rem;
+}
+.toEvaluation{
+  width: 100%;
+  height: 4rem;
+  background-color: $c_bg;
+  line-height: 5.5rem;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  img{
+    width: 2rem;
+  }
+  span{
+    font-size: 14px;
+    position: relative;
+    right: 1rem;
+    top: -0.5rem;
+  }
+}
+.star{
+  span{
+    width:52px;
+    height:52px;
+    display: inline-block;
+  }
+  .yellowStar{
+    background: url(../img/yellow.png) no-repeat;
+    background-size: 80% 80%;
+  }
+  .grayStar{
+    background: url(../img/gray.png) no-repeat;
+    background-size: 80% 80%;
+  }
+}
+.pS{
+  margin: 17px 5% 2rem;
+  li{
+    line-height:18px;
+    height:3.4rem;
+    margin-bottom: 1.4rem;
+    border-bottom: 1px solid #E6E6E6;
+    span,input{
+      font-size: $f_14;
+      display: block;
+      height:35px;
+    }
+    span{
+      color: black;
+      width:15%;
+      float:left;
+    }
+    input{
+      width:85%;
+      font-size: 1.6rem;
+      float:left;
+      padding:5px;
+      border: none;
+      height: 32px;
+      margin-top: -7px;
+      text-align: right;
+    }
+  }
+}
+.errTips{
+  text-align: center;
+  color:orange;
+  margin-top:68px;
+}
+.remainInfo,.resultTip{
+  text-align: center;
+  /*background-color: #F4F4F4;*/
+  height: 5rem;
+  line-height: 5rem;
+  p{
+    text-align: center;
+  }
+}
+#docInfo{
+  position: relative;
+  .my_eva{
+    display: block;
+  }
+  .scoLogo{
+    position: absolute;
+    top:0;
+    right:0;
+    em{
+      width:20px;
+      height:20px;
+      display: inline-block;
+    }
+    .sYel{
+      background: url(../img/yellow.png) no-repeat;
+      background-size: contain;
+    }
+    .sGra{
+      background: url(../img/gray.png) no-repeat;
+      background-size: contain;
+    }
+  }
+}
+.deTags{
+  .on{
+    background:#999;
+  }
+}
+#myInsurance{
+  margin-top: 6rem;
+.evaluation{
+}
+  .alEval{
+    color:#999;
+    border:1px solid #999;
+  }
+}
+
+.feedPic{
+  padding:8px 3.2% 20px;
+}
+.msglBg{
+  padding-bottom: 20px;
+}
+.msgcArea{
+  min-height: 650px;
+  background:#F4F4F4;
+}
+.grayBtn{
+  background: #ccc;
+}
+.goeval{
+  width:50%;
+  margin:0 auto;
+}
+.onlineTips{
+  color:orange;
+  text-align: center;
+  margin-top:15px;
+}

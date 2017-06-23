@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>问诊评价</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body>
+<div class="top">
+    <em>
+        <img src="../statics/img/enter.png" alt="">
+    </em>
+    <span>我的评价</span>
+</div>
+<div class='eP marTop5'>
+    <dl id="docInfo">
+       <!--<dt><img src="../statics/img/3.jpg" alt=""></dt>-->
+        <!--<dd class="dd1">徐毅飞</dd>-->
+        <!--<dd> <span>杏林医院</span>&nbsp;&nbsp; <span>呼吸内科</span> <strong>问诊量&nbsp;&nbsp;&nbsp;20</strong></dd>-->
+    </dl>
+    <p class="line1">
+        <span></span>
+        <a href="#">给医生评价鼓励</a>
+    </p>
+    <div class="star" id="grade">
+        <span class="grayStar"></span>
+        <span class="grayStar"></span>
+        <span class="grayStar"></span>
+        <span class="grayStar"></span>
+        <span class="grayStar"></span>
+    </div>
+    <textarea name="" id="evaCon" cols="30" rows="3" placeholder="对于本次问诊的补充和建议"></textarea>
+    <input type="button" value="提交评价" class="btn" id="subGrade">
+</div>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/jquery-1.7.2.min.js"></script>
+<script src="../statics/js/common/baidu_template.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+
+<script id="docInfoTpl" type="text/html">
+<dt><img src="<%=doc.image%>" alt=""></dt>
+<dd class="dd1"><%=doc.name%></dd>
+<dd class="scoLogo">
+<%for(var i=0;i<Math.ceil(doc.score);i++){%>
+    <em class="sYel"></em>
+<%}%>
+<%for(var i=0;i<(5-Math.ceil(doc.score));i++){%>
+    <em class="sGra"></em>
+<%}%>
+</dd>
+<dd>
+    <span><%=doc.hospital%></span>&nbsp;&nbsp;<span class="my_eva"><%=doc.department%></span> <strong>问诊量&nbsp;&nbsp;&nbsp;<%=doc.askNumber%></strong></dd>
+</script>
+<script type="text/javascript">
+$(function(){
+    var $grade = $('#grade');
+    var docId = localStorage.getItem('docid');
+   // var docId = '000000004497b0487e864d76bf3f01dec5612e14';
+    var wzid = localStorage.getItem('wzid');
+    var evastatus = localStorage.getItem('evastatus');
+    //var userToken='b154627c8fee4614aae4989795cfb1b0220000000b154627c8fee4614aae4989795cfb1b0';
+    
+    var docinfoUrl = window.YLZ.base+'com/docs/'+docId+'?token='+localStorage.getItem("userToken1");
+    var scoreUrl = window.YLZ.base+'pat/askings/'+wzid+'/scores?token='+localStorage.getItem("userToken1");
+    var evaUrl = window.YLZ.base+'com/askings/'+wzid+'/scores?token='+localStorage.getItem("userToken1"); 
+    //var docinfoUrl = window.YLZ.base+'com/docs/'+docId+'?token='+userToken;
+    //var scoreUrl = window.YLZ.base+'pat/askings/'+wzid+'/scores?token='+userToken;
+    //初始化医生信息
+    $.ajax({
+         type:'get',
+         url: docinfoUrl,
+         data:{
+              
+           },
+        success:function(data){
+           var html1 = bt('docInfoTpl',data);
+           $('#docInfo').append(html1);
+         }
+    });
+    if(evastatus==1){
+        //查看一次问诊评价
+      $.ajax({
+           type:'get',
+           url: evaUrl,
+           async:false,
+           data:{
+
+           },
+           success:function(data){
+              var num = Math.ceil(data.score);
+              //console.log(num);
+              $('#grade').find('span').eq(num-1).prevAll().addClass('yellowStar').removeClass('grayStar');
+              $('#grade').find('span').eq(num-1).addClass('yellowStar').removeClass('grayStar');
+              $grade.on('click','span',function(){
+                  return;
+              });
+              $('#evaCon').on('focus',function(){
+                 var that = $(this);
+                 that.attr('readonly','readonly');
+              });
+              $('#evaCon').val(data.content);
+              $('#subGrade').on('click',function(){
+                return;
+              });
+           }
+        });
+    }else if(evastatus==0){
+         $grade.on('click','span',function(){
+            //debugger
+            var that = $(this);
+            that.addClass('yellowStar').removeClass('grayStar');
+            that.prevAll().addClass('yellowStar').removeClass('grayStar');
+            that.nextAll().addClass('grayStar').removeClass('yellowStar');
+        });
+           $('#subGrade').on('click',function(){
+        //先验证
+        var evaCon = $('#evaCon').val();
+        var scoreLen = ($grade.find('.yellowStar').length).toString();
+       
+        if(scoreLen==''||scoreLen==0){
+            alert('请给出评价分数');
+            return false;
+        }
+        if(evaCon==''){
+            alert('评价内容不能为空');
+            return false;
+        }
+        //提交评价
+        $.ajax({
+               type:'post',
+               contentType: "application/json; charset=utf-8",
+               dataType: "json",
+               url: scoreUrl,
+               async:false,
+               data:JSON.stringify({
+                  "content":evaCon,
+                  "score":scoreLen
+               }),
+               success:function(data){
+                    if(data.result.code==0){
+                        location.href="my_enquiry.html";
+                    }
+               }
+            });
+        });   
+    }
+    //$('#grade').find('span').removeClass('yellowStar').addClass('grayStar');
+      //打分
+ });
+</script>
+</body>
+</html>

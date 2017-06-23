@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>搜索</title>
+    <link rel="stylesheet" href="../statics/css/allWap.css">
+</head>
+<body class="background">
+    <div class="search">
+        <em><img src="../statics/img/enter.png" alt=""></em>
+        <input type="text" placeholder="搜索医院、医生">
+        <span><img src="../statics/img/searchLogo.png" alt=""></span>
+        <!--<strong class="cancel">取消</strong>-->
+        <strong class="search_blue">搜索</strong>
+    </div>
+    <div class="search_content">
+        <div class="hot_house">
+            <h3>热门科室</h3>
+            <div>
+                <dl>
+                    <dt><img src="../statics/img/bone.png" alt=""></dt>
+                    <dd>骨科</dd>
+                </dl>
+                <dl>
+                    <dt><img src="../statics/img/child.png" alt=""></dt>
+                    <dd>儿科</dd>
+                </dl>
+                <dl>
+                    <dt><img src="../statics/img/woman.png" alt=""></dt>
+                    <dd>妇产科</dd>
+                </dl>
+                <dl>
+                    <dt><img src="../statics/img/detail.png" alt=""></dt>
+                    <dd>口腔科</dd>
+                </dl>
+                <dl>
+                    <dt><img src="../statics/img/general.png" alt=""></dt>
+                    <dd>普外科</dd>
+                </dl>
+                <dl>
+                    <dt><img src="../statics/img/man.png" alt=""></dt>
+                    <dd>男科</dd>
+                </dl>
+                <dl>
+                    <dt><img src="../statics/img/digesition.png" alt=""></dt>
+                    <dd>消化内科</dd>
+                </dl>
+                <dl>
+                    <dt><img src="../statics/img/skin.png" alt=""></dt>
+                    <dd>皮肤科</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="hospital">
+            <h3>热门医院</h3>
+            <ul id="addHos">
+            </ul>
+        </div>
+        <div class="old_expert" id="hot_doctor">
+            <h3>热门医生</h3>
+
+        </div>
+        <div class="expert_team">
+            <h3>热门团队</h3>
+            <div id="expert_team">
+
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../statics/js/common/zepto.min.js"></script>
+<script src="../statics/js/common/basic.js"></script>
+<script src="../statics/js/xyfpublic/xyfpublic.js"></script>
+<script>
+    (function(window,undefined){
+        var $searB=$('.search_blue');
+        var $searIn=$('.search input');
+        var userId=localStorage.getItem('userId');
+        $searIn.focus();
+        //相关医院医生的搜索
+//        var  reg=/^(\s+)/g;
+//        $searIn.on('keyup',function(){
+//            if($(this).val()!=''&&!$(this).val().match(reg)){
+                $searB.on('click',function(){
+                    localStorage.setItem('searchvalue',$searIn.val());
+                    $searIn.val('');
+                    location.href='search_page2.html';
+                });
+//            }
+//            else{
+//                $searB.css('display','none');
+//                $('.cancel').css('display','block')
+//            }
+//        });
+        $('#hot_doctor .border').on('tap',function(){
+            localStorage.setItem('doctorId',$(this).attr('data-id'));
+            location.href='fxychat.html';
+        });
+        //首页推荐的医院
+        $('#addHos').on('click','li',function(){
+            localStorage.setItem('xyfId',$(this).attr('data-id'));
+            location.href='recommend_hospital.html'
+        });
+        function addHospital(data){
+            var html='';
+            for (var i=0;i<data.length;i++) {
+                html+='<li data-id="'+data[i].id+'"><a href="#">'+data[i].name+'</a></li>';
+            }
+            $('#addHos').append(html)
+        }
+        //ajax请求渲染首页推荐的医院
+       $.ajax({
+            type:'get',
+            url:YLZ.base+'pat/ads/hospitals?token='+localStorage.getItem('userToken')+'&page=1&size=6',
+            data:'',
+            success:function(data){
+                if(data.result.code==0){
+//                    console.log(data);
+                    addHospital(data.hospitals);
+                }else{
+                    alert('数据加载异常')
+                }
+            }
+        });
+
+        //搜索的热门医生以及渲染
+        function addDocs(data){
+            for (var i=0;i<data.length;i++) {
+                var html='';
+                html+='<dl class="clearfix" data-id="'+data[i].docId+'">';
+                if(data[i].image==''||data[i].image==null){
+                    html+='<dt><img src="../statics/img/logo.png" alt=""></dt>';
+                }else{
+                    html+='<dt><img src="'+data[i].image+'" alt=""></dt>';
+                }
+                html+='<dd class="dd1">';
+                html+=' <span>'+data[i].name+'</span>';
+                html+='<span class="border" data-id="'+data[i].docId+'">免费问诊</span>';
+                html+=' <dd>'+data[i].hospital+'</dd>';
+                html+='</dd>';
+                html+=' <dd>';
+                if(data[i].title!=null&&data[i].title!=''){
+                    html+='<span>'+data[i].title+'</span>';
+                }
+                if(data[i].educationTitle!=null&&data[i].educationTitle!=''){
+                    html+=' <span>/'+data[i].educationTitle+'</span>';
+                }
+                html+='/<span>'+data[i].department+'</span>';
+                html+='</dd>';
+                html+=' </dl>';
+                $('.old_expert').append(html)
+            }
+        }
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'pat/ads/docs?token='+localStorage.getItem('userToken')+'&page=1&size=2',
+            data:'',
+            success:function(data){
+//                console.log(data);
+                if(data.result.code==0){
+//                    console.log(data.docs);
+                    addDocs(data.docs);
+                }else{
+                    alert('数据加载异常')
+                }
+            }
+        });
+
+        //热门专家团队
+        $.ajax({
+            type:'get',
+            url:YLZ.base+'pat/groups?token='+localStorage.getItem('userToken')+'&page=1&size=2',
+            success:function(data){
+                cloudFunction.addTeam(data.groups)
+            }
+        });
+        //跳转到团队聊天的界面
+        //跳转到团队聊天
+        $('#expert_team').on('click','.free_enquiry',function(event){
+            event.stopPropagation();
+            var teamId=$(this).attr('data-id');
+            $.ajax({
+                type:'post',
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                data:JSON.stringify({
+                    'patId':userId,
+                    'groupId':teamId
+                }),
+                url:window.YLZ.base+'com/tempgroups?token='+userToken,
+                success:function(data){
+                    localStorage.setItem('doctorTeamId',data.groupId);
+                    location.href='flock_chat.html'
+                }
+            })
+        })
+        //相关团队主页的跳转
+        $('#expert_team').on('click','dl',function(){
+            localStorage.setItem('teamId',$(this).attr('data-id'));
+            location.href='team_page.html';
+        })
+        $('.search').on('click','em',function(){
+            location.href='home_page.html'
+        })
+    })(window)
+</script>
+</html>
